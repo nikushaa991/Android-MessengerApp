@@ -7,4 +7,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="login_text">#f3f6ff</color>
+    <color name="login_signin">#5479f1</color>
+
+
+    <color name="signup_text">#f3f6ff</color>
+    <color name="signup_signup">#5479f1</color>
+
+
+    <color name="conversations_collapsing_background">#5479f1</color>
+    <color name="conversations_search_background">#d4defd</color>
 </resources>

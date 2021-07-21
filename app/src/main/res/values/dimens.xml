@@ -1,0 +1,16 @@
+<resources>
+
+    <dimen name="login_icon_size">200dp</dimen>
+    <dimen name="login_margin_big">32dp</dimen>
+    <dimen name="login_margin_small">16dp</dimen>
+    <dimen name="login_text_width">300dp</dimen>
+    <dimen name="login_text_height">40dp</dimen>
+    <dimen name="login_signup_button_stroke">1dp</dimen>
+
+    <dimen name="signup_icon_size">200dp</dimen>
+    <dimen name="signup_margin_huge">64dp</dimen>
+    <dimen name="signup_margin_big">32dp</dimen>
+    <dimen name="signup_margin_small">16dp</dimen>
+    <dimen name="signup_text_width">300dp</dimen>
+    <dimen name="signup_text_height">40dp</dimen>
+</resources>

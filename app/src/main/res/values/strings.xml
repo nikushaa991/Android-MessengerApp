@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">MessengerApp</string>
+    <string name="ellipses">...</string>
+
+
+    <string name="login_signin_button">Sign In</string>
+    <string name="login_signup_button">Sign Up</string>
+    <string name="login_signup_text">Not registered?</string>
+    <string name="login_nickname_text">Enter your nickname</string>
+    <string name="login_password_text">Enter your password</string>
+
+
+    <string name="signup_signup_button">Sign Up</string>
+    <string name="signup_nickname_text">Enter your nickname</string>
+    <string name="signup_password_text">Enter your password</string>
+    <string name="signup_profession_text">What I do</string>
+
 </resources>
