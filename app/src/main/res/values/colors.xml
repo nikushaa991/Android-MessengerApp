@@ -17,6 +17,9 @@
     <color name="signup_signup">#5479f1</color>
 
 
-    <color name="conversations_collapsing_background">#5479f1</color>
+    <color name="menu_blue">#5479f1</color>
     <color name="conversations_search_background">#d4defd</color>
+    <color name="settings_update">#5479f1</color>
+    <color name="settings_text">#f3f6ff</color>
+
 </resources>

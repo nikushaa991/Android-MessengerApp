@@ -9,7 +9,7 @@
 
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/login_icon"
+        android:id="@+id/settings_icon"
         android:layout_width="@dimen/login_icon_size"
         android:layout_height="@dimen/login_icon_size"
         android:layout_marginTop="@dimen/login_margin_big"
@@ -23,34 +23,32 @@
         app:srcCompat="@drawable/avatar_image_placeholder" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_nameText"
+        android:id="@+id/settings_name"
         android:layout_width="@dimen/login_text_width"
         android:layout_height="@dimen/login_text_height"
         android:layout_marginTop="@dimen/login_margin_big"
         android:background="@color/login_text"
-
         android:gravity="center"
-        android:hint="@string/login_nickname_text"
-        app:hintEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_icon"
-        app:placeholderText="Enter your nickname"
+        app:layout_constraintTop_toBottomOf="@+id/settings_icon"
+        app:placeholderText="@string/login_nickname_text"
         app:placeholderTextColor="@android:color/darker_gray"
         app:shapeAppearanceOverlay="@style/RoundedCornersText" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_passText"
+        android:id="@+id/settings_profession"
         android:layout_width="@dimen/login_text_width"
         android:layout_height="@dimen/login_text_height"
         android:layout_marginTop="@dimen/login_margin_small"
         android:background="@color/login_text"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_nameText"
 
+        app:layout_constraintTop_toBottomOf="@+id/settings_name"
         app:placeholderText="@string/login_password_text"
         app:placeholderTextColor="@android:color/darker_gray"
         app:shapeAppearanceOverlay="@style/RoundedCornersText">
@@ -67,7 +65,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_passText" />
+        app:layout_constraintTop_toBottomOf="@+id/settings_profession" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_signup_button"
