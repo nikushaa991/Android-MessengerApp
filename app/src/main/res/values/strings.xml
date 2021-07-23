@@ -21,5 +21,6 @@
     <string name="conversations_search_hint">Search</string>
     <string name="settings_sign_out">Sign Out</string>
     <string name="settings_update">Update</string>
+    <string name="search_search_hint">Search</string>
 
 </resources>

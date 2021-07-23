@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".scenes.signup.MainActivity">
+    tools:context=".scenes.signup.SignupActivity">
 
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -22,57 +22,52 @@
         app:shapeAppearanceOverlay="@style/Circle"
         app:srcCompat="@drawable/avatar_image_placeholder" />
 
-    <com.google.android.material.textfield.TextInputLayout
+
+    <EditText
         android:id="@+id/signup_nameText"
         android:layout_width="@dimen/signup_text_width"
         android:layout_height="@dimen/signup_text_height"
         android:layout_marginTop="@dimen/signup_margin_big"
-        android:background="@color/signup_text"
+        android:background="@drawable/edittext_rounded"
 
         android:gravity="center"
+        android:hint="@string/signup_nickname_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_icon"
-        app:placeholderText="@string/signup_nickname_text"
-        app:placeholderTextColor="@android:color/darker_gray"
-        app:shapeAppearanceOverlay="@style/RoundedCornersText" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_icon" />
 
-    <com.google.android.material.textfield.TextInputLayout
+
+    <EditText
         android:id="@+id/signup_passText"
         android:layout_width="@dimen/signup_text_width"
         android:layout_height="@dimen/signup_text_height"
         android:layout_marginTop="@dimen/signup_margin_small"
-        android:background="@color/signup_text"
+        android:background="@drawable/edittext_rounded"
         android:gravity="center"
+        android:hint="@string/signup_password_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signup_nameText" />
 
-        app:layout_constraintTop_toBottomOf="@+id/signup_nameText"
-        app:placeholderText="@string/signup_password_text"
-        app:placeholderTextColor="@android:color/darker_gray"
-        app:shapeAppearanceOverlay="@style/RoundedCornersText">
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
         android:id="@+id/signup_profText"
         android:layout_width="@dimen/signup_text_width"
         android:layout_height="@dimen/signup_text_height"
         android:layout_marginTop="@dimen/login_margin_small"
-        android:background="@color/signup_text"
+        android:background="@drawable/edittext_rounded"
         android:gravity="center"
+        android:hint="@string/signup_profession_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+
         app:layout_constraintStart_toStartOf="parent"
-
         app:layout_constraintTop_toBottomOf="@id/signup_passText"
-        app:placeholderText="@string/signup_profession_text"
-        app:placeholderTextColor="@android:color/darker_gray"
-        app:shapeAppearanceOverlay="@style/RoundedCornersText">
 
-    </com.google.android.material.textfield.TextInputLayout>
+        />
 
     <Button
         android:id="@+id/signup_signin_button"

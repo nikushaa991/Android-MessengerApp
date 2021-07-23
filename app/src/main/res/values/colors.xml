@@ -8,18 +8,22 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="edittext_white">#f3f6ff</color>
 
     <color name="login_text">#f3f6ff</color>
     <color name="login_signin">#5479f1</color>
 
-
     <color name="signup_text">#f3f6ff</color>
     <color name="signup_signup">#5479f1</color>
-
 
     <color name="menu_blue">#5479f1</color>
     <color name="conversations_search_background">#d4defd</color>
     <color name="settings_update">#5479f1</color>
     <color name="settings_text">#f3f6ff</color>
+
+    <color name="search_bar">#5479F1</color>
+    <color name="chat_blue">#5479f1</color>
+    <color name="chat_gray">#f4f6ff</color>
+    <color name="chat_dark_blue">#7781a0</color>
 
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/chat_padding"
+    android:paddingTop="@dimen/chat_padding"
+    android:paddingRight="@dimen/chat_padding">
+
+    <TextView
+        android:id="@+id/sent_chat_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textview_left"
+        android:gravity="end"
+        android:padding="@dimen/chat_padding"
+        android:textColor="@color/chat_dark_blue"
+        tools:text="mishvelet gtxovt" />
+
+    <TextView
+        android:id="@+id/sent_chat_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/chat_padding"
+        android:layout_marginLeft="@dimen/chat_padding"
+        android:gravity="end"
+        tools:text="12:10" />
+
+
+</LinearLayout>
