@@ -10,7 +10,7 @@
     android:layout_marginRight="@dimen/search_margin_big">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/search_icon"
+        android:id="@+id/login_icon"
         android:layout_width="@dimen/search_icon_size"
         android:layout_height="@dimen/search_icon_size"
         android:contentDescription="@string/ellipses"

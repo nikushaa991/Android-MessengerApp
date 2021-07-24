@@ -10,7 +10,7 @@
     tools:context=".scenes.menu.SettingsFragment">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/search_icon"
+        android:id="@+id/settings_icon"
         android:layout_width="@dimen/settings_icon_size"
         android:layout_height="@dimen/settings_icon_size"
         android:layout_marginTop="@dimen/settings_margin_top"
@@ -25,7 +25,9 @@
         android:layout_height="@dimen/settings_text_height"
         android:layout_marginTop="@dimen/settings_margin_big"
         android:background="@drawable/edittext_rounded"
-        android:gravity="center" />
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/settings_profession"
@@ -33,7 +35,9 @@
         android:layout_height="@dimen/settings_text_height"
         android:layout_marginTop="@dimen/settings_margin_small"
         android:background="@drawable/edittext_rounded"
-        android:gravity="center" />
+        android:gravity="center"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/settings_update_button"

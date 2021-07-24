@@ -1,47 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".scenes.chat.ChatActivity">
 
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/chat_appbar_height"
-        android:layout_marginBottom="@dimen/chat_margin"
-        android:background="@color/menu_blue"
-        app:elevation="4dp">
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:contentScrim="@color/menu_blue"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chat_appbar_height"
+            android:background="@color/menu_blue"
+            app:elevation="4dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/back" />
+                app:contentScrim="@color/menu_blue"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/chat_toolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/back" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/conversations_recycler"
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:itemCount="8"
+            tools:listitem="@layout/chat_recycler_sent_item">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:itemCount="8"
-        tools:listitem="@layout/chat_recycler_sent_item">
+        android:layout_height="@dimen/chat_textfield_height"
+        android:layout_marginStart="@dimen/chat_margin_small"
+        android:layout_marginEnd="@dimen/chat_margin_small"
+        android:layout_marginBottom="@dimen/chat_margin_small"
+        android:background="@drawable/chat_rounded"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/chat_padding"
+        android:paddingEnd="@dimen/chat_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/chat_margin"
+            android:layout_weight="1"
+            android:background="@null"
+            android:importantForAutofill="no"
+            android:inputType="text" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/chat_radius"
+            android:layout_height="@dimen/chat_radius"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/circle"
+            android:contentDescription="@string/ellipses"/>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/chat_pb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/menu_blue"
+        android:translationZ="100dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>

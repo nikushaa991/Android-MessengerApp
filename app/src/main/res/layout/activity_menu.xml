@@ -37,4 +37,14 @@
         app:layout_anchor="@id/bottomAppBar"
         app:tint="@color/white" />
 
+    <ProgressBar
+        android:id="@+id/menu_pb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/menu_blue"
+        android:translationZ="100dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

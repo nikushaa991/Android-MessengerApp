@@ -7,9 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".scenes.login.MainActivity">
 
-
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/search_icon"
+        android:id="@+id/login_icon"
         android:layout_width="@dimen/login_icon_size"
         android:layout_height="@dimen/login_icon_size"
         android:layout_marginTop="@dimen/login_margin_big"
@@ -23,7 +22,7 @@
         app:srcCompat="@drawable/avatar_image_placeholder" />
 
     <EditText
-        android:id="@+id/settings_name"
+        android:id="@+id/login_name"
         android:layout_width="@dimen/login_text_width"
         android:layout_height="@dimen/login_text_height"
         android:layout_marginTop="@dimen/login_margin_big"
@@ -33,10 +32,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/login_icon"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/settings_profession"
+        android:id="@+id/login_profession"
         android:layout_width="@dimen/login_text_width"
         android:layout_height="@dimen/login_text_height"
         android:layout_marginTop="@dimen/login_margin_small"
@@ -47,7 +48,9 @@
         app:layout_constraintHorizontal_bias="0.5"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_name" />
+        app:layout_constraintTop_toBottomOf="@+id/login_name"
+        android:importantForAutofill="no"
+        android:inputType="textVisiblePassword" />
 
 
     <Button
@@ -60,7 +63,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_profession" />
+        app:layout_constraintTop_toBottomOf="@+id/login_profession" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_signup_button"
@@ -87,4 +90,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/login_pb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/menu_blue"
+        android:translationZ="100dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

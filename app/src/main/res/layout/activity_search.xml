@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".scenes.search.SearchActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/search_bar_height"
+        android:layout_height="wrap_content"
         android:background="@color/search_bar"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingTop="@dimen/search_margin_big"
-        android:paddingBottom="@dimen/search_margin_big">
+        android:paddingBottom="@dimen/search_margin_big"
+        app:layout_constraintBottom_toTopOf="@+id/search_recycler"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/search_back_button"
             android:layout_width="@dimen/search_back_button_width"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/login_margin_small"
-            android:layout_marginLeft="@dimen/login_margin_small"
             android:background="@null"
             android:contentDescription="@string/ellipses"
             android:scaleType="centerInside"
@@ -33,7 +37,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/search_margin_small"
-            android:layout_marginRight="@dimen/search_margin_small"
             android:layout_weight="1"
             android:background="@drawable/search_rounded"
             app:queryHint="@string/search_search_hint" />
@@ -41,9 +44,23 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
         tools:itemCount="13"
         tools:listitem="@layout/search_recycler_item" />
 
-</LinearLayout>
+    <ProgressBar
+        android:id="@+id/search_pb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:drawable/screen_background_dark_transparent"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/menu_blue"
+        android:translationZ="100dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</androidx.constraintlayout.widget.ConstraintLayout>
