@@ -26,7 +26,6 @@
 
     <dimen name="settings_button_width">128dp</dimen>
     <dimen name="settings_signout_button_stroke">1dp</dimen>
-    <dimen name="settings_margin_top">96dp</dimen>
     <dimen name="settings_margin_big">32dp</dimen>
     <dimen name="settings_margin_small">16dp</dimen>
     <dimen name="settings_icon_size">200dp</dimen>

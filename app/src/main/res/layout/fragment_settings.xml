@@ -13,7 +13,7 @@
         android:id="@+id/settings_icon"
         android:layout_width="@dimen/settings_icon_size"
         android:layout_height="@dimen/settings_icon_size"
-        android:layout_marginTop="@dimen/settings_margin_top"
+        android:layout_marginTop="@dimen/settings_margin_big"
         android:contentDescription="@string/ellipses"
         android:scaleType="fitXY"
         app:shapeAppearanceOverlay="@style/Circle"

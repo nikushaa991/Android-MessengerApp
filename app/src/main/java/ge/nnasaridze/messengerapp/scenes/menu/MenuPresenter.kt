@@ -9,7 +9,7 @@ class MenuPresenterImpl : MenuPresenter {
         TODO("Not yet implemented")
     }
 
-    override fun chatClicked(position: Int) {
+    override fun chatPressed(position: Int) {
         TODO("Not yet implemented")
     }
 
