@@ -10,8 +10,11 @@ import ge.nnasaridze.messengerapp.scenes.menu.MenuActivity
 import ge.nnasaridze.messengerapp.scenes.signup.SignupActivity
 
 class MainActivity : LoginView, AppCompatActivity() {
+
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var presenter: LoginPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)

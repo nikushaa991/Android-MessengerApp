@@ -9,7 +9,12 @@ import android.view.WindowManager
 import ge.nnasaridze.messengerapp.databinding.FragmentSettingsBinding
 
 
-class SettingsFragment : Fragment() {
+class SettingsFragment(
+    private val updateHandler: () -> Unit,
+    private val signoutHandler: () -> Unit,
+    private val imageHandler: () -> Unit
+) : Fragment() {
+
     private lateinit var binding: FragmentSettingsBinding
 
     override fun onCreateView(
@@ -17,6 +22,10 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
+
+        binding.settingsUpdateButton.setOnClickListener { updateHandler }
+        binding.settingsSignoutButton.setOnClickListener { signoutHandler }
+        binding.settingsIcon.setOnClickListener { imageHandler }
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         return binding.root
@@ -27,14 +36,14 @@ class SettingsFragment : Fragment() {
     }
 
     fun setName(name: String) {
-        TODO("Not yet implemented")
+        binding.settingsName.setText(name)
     }
 
     fun setProfession(profession: String) {
-        TODO("Not yet implemented")
+        binding.settingsProfession.setText(profession)
     }
 
     fun setImage(image: Int) {
-        TODO("Not yet implemented")
+        binding.settingsIcon.setImageResource(image)
     }
 }

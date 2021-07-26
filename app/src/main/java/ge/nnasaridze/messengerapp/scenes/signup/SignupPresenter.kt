@@ -1,7 +1,37 @@
 package ge.nnasaridze.messengerapp.scenes.signup
 
-class SignupPresenterImpl : SignupPresenter {
+import ge.nnasaridze.messengerapp.shared.CREDENTIALS_ERROR
+import ge.nnasaridze.messengerapp.shared.authenticator.Authenticator
+import ge.nnasaridze.messengerapp.shared.isValidCredential
+
+
+class SignupPresenterImpl(private val view: SignupView) : SignupPresenter {
+
+
+    private val auth = Authenticator.getInstance()
+
     override fun signupPressed() {
-        TODO("Not yet implemented")
+        val name = view.getNickname()
+        val pass = view.getPassword()
+        val prof = view.getProfession()
+
+        if (isValidCredential(name) == false ||
+            isValidCredential(pass) == false ||
+            isValidCredential(prof) == false
+        ) {
+            view.displayError(CREDENTIALS_ERROR)
+            return
+        }
+
+        view.showLoading()
+        auth.register(name, pass, prof) { isSuccessful ->
+            view.hideLoading()
+            if (isSuccessful)
+                view.gotoLogin()
+            else
+                view.displayError("Registration failed")
+        }
     }
+
+    //TODO: PROFESSION
 }

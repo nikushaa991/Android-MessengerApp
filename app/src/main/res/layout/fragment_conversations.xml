@@ -34,12 +34,11 @@
                 android:layout_height="@dimen/conversations_search_height"
                 android:layout_gravity="bottom"
                 android:layout_marginEnd="@dimen/conversations_search_margin"
-                android:layout_marginRight="@dimen/conversations_search_margin"
                 android:layout_marginBottom="@dimen/conversations_search_margin"
                 app:layout_collapseMode="pin">
 
                 <androidx.appcompat.widget.SearchView
-                    android:id="@+id/search_search"
+                    android:id="@+id/conversations_search"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/search_rounded"

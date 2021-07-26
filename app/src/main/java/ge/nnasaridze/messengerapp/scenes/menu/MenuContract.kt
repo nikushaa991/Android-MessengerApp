@@ -4,7 +4,7 @@ interface MenuView{
     fun gotoSearch()
 
     fun setConversationsFragment()
-    fun updateConversations()//TODO pass data
+    fun updateConversations(data: ArrayList<Int>)//TODO pass data
     fun gotoChat()
 
     fun setSettingsFragment()

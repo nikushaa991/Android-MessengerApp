@@ -1,24 +1,24 @@
 package ge.nnasaridze.messengerapp.scenes.menu
 
-class MenuPresenterImpl : MenuPresenter {
+class MenuPresenterImpl(private val view: MenuView) : MenuPresenter {
     override fun fabPressed() {
-        TODO("Not yet implemented")
+        view.gotoSearch()
     }
 
     override fun homePressed() {
-        TODO("Not yet implemented")
+        view.setConversationsFragment()
     }
 
     override fun chatPressed(position: Int) {
-        TODO("Not yet implemented")
+        view.gotoChat()
     }
 
     override fun searchEdited(text: String) {
-        TODO("Not yet implemented")
+        //TODO search logic
     }
 
     override fun settingsPressed() {
-        TODO("Not yet implemented")
+        view.setSettingsFragment()
     }
 
     override fun updatePressed() {
@@ -30,6 +30,6 @@ class MenuPresenterImpl : MenuPresenter {
     }
 
     override fun imagePressed() {
-        TODO("Not yet implemented")
+        view.pickImage()
     }
 }
