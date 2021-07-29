@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.menu
+package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

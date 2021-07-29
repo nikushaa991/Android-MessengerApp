@@ -1,10 +1,12 @@
-package ge.nnasaridze.messengerapp.scenes.menu
+package ge.nnasaridze.messengerapp.scenes.menu.presentation
+
+import ge.nnasaridze.messengerapp.shared.repository.realtimedb.entities.ChatEntity
 
 interface MenuView{
     fun gotoSearch()
 
     fun setConversationsFragment()
-    fun updateConversations(data: ArrayList<Int>)//TODO pass data
+    fun updateConversations(data: List<ChatEntity>)//TODO pass data
     fun gotoChat()
 
     fun setSettingsFragment()

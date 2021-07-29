@@ -1,18 +1,15 @@
-package ge.nnasaridze.messengerapp.scenes.menu
+package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.ActivityMenuBinding
 import ge.nnasaridze.messengerapp.scenes.chat.ChatActivity
 import ge.nnasaridze.messengerapp.scenes.login.MainActivity

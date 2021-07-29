@@ -11,7 +11,7 @@
         android:theme="@style/Theme.MessengerApp">
         <activity android:name=".scenes.chat.ChatActivity"></activity>
         <activity android:name=".scenes.search.SearchActivity" />
-        <activity android:name=".scenes.menu.MenuActivity" />
+        <activity android:name=".scenes.menu.presentation.MenuActivity" />
         <activity android:name=".scenes.signup.SignupActivity" />
         <activity android:name=".scenes.login.MainActivity">
             <intent-filter>

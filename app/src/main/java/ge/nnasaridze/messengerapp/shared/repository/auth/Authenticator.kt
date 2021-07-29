@@ -1,22 +1,23 @@
-package ge.nnasaridze.messengerapp.shared.authenticator
+package ge.nnasaridze.messengerapp.shared.repository.auth
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import ge.nnasaridze.messengerapp.shared.EMAIL_SUFFIX
 import ge.nnasaridze.messengerapp.shared.UNREGISTERED
+import kotlinx.coroutines.CompletableDeferred
 
-class AuthenticatorImpl : Authenticator {
+class Authenticator {
     private val auth = Firebase.auth
-    override fun getID(): String {
+
+    fun getID(): String {
         return auth.uid ?: UNREGISTERED
     }
 
-
-    override fun isAuthenticated(): Boolean {
+    fun isAuthenticated(): Boolean {
         return auth.currentUser != null
     }
 
-    override fun authenticate(
+    fun authenticate(
         nickname: String,
         password: String,
         handler: (isSuccessful: Boolean) -> Unit
@@ -25,16 +26,18 @@ class AuthenticatorImpl : Authenticator {
             .addOnCompleteListener { task -> handler(task.isSuccessful) }
     }
 
-    override fun register(
+
+    fun register(
         nickname: String,
         password: String,
-        profession: String,
         handler: (isSuccessful: Boolean) -> Unit
     ) {
-        auth.createUserWithEmailAndPassword("nickname$EMAIL_SUFFIX", password)
-            .addOnCompleteListener { task -> handler(task.isSuccessful) }
-        //TODO: profession
+        auth.createUserWithEmailAndPassword("$nickname$EMAIL_SUFFIX", password)
+            .addOnCompleteListener { task ->
+                handler(task.isSuccessful)
+            }
     }
+
 
 }
 

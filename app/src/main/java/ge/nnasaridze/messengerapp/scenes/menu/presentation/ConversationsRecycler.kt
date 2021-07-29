@@ -1,11 +1,10 @@
-package ge.nnasaridze.messengerapp.scenes.menu
+package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.ConversationsRecyclerItemBinding
-import ge.nnasaridze.messengerapp.scenes.menu.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
 
 
 class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit) :

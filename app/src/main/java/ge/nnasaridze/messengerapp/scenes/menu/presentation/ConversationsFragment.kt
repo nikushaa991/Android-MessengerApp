@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.menu
+package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.FragmentConversationsBinding
 
 class ConversationsFragment(private val handler: (position: Int) -> Unit) : Fragment() {
