@@ -1,9 +1,9 @@
-package ge.nnasaridze.messengerapp.shared.repository.realtimedb.entities
+package ge.nnasaridze.messengerapp.shared.repositories.chats
 
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class MessageEntity(
+data class MessageDTO(
     val sender: String? = null,
     val message: String? = null,
     val timestamp: Int? = null

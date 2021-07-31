@@ -4,11 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import ge.nnasaridze.messengerapp.R
-import ge.nnasaridze.messengerapp.databinding.ActivityMainBinding
 import ge.nnasaridze.messengerapp.databinding.ActivitySignupBinding
-import ge.nnasaridze.messengerapp.scenes.login.LoginPresenter
-import ge.nnasaridze.messengerapp.scenes.login.LoginPresenterImpl
 
 class SignupActivity : SignupView, AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding

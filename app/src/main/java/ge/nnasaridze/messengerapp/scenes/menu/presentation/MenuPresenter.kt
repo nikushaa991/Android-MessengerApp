@@ -1,14 +1,24 @@
 package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
+import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.DefaultGetChatsUsecase
+import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.DefaultSignoutUsecase
 import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.GetChatsUsecase
-import ge.nnasaridze.messengerapp.shared.repository.realtimedb.entities.ChatEntity
+import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.SignoutUsecase
+import ge.nnasaridze.messengerapp.shared.repositories.chats.ChatDTO
 
 class MenuPresenterImpl(private val view: MenuView) : MenuPresenter {
-    private val data = mutableMapOf<String, ChatEntity>()
+
+    private val getChatsUsecase: GetChatsUsecase
+    private val signoutUsecase: SignoutUsecase
+
+    private val data = mutableMapOf<String, ChatDTO>()
     private var query = ""
 
     init {
-        GetChatsUsecase().execute(::chatUpdateHandler)
+        getChatsUsecase = DefaultGetChatsUsecase()
+        signoutUsecase  = DefaultSignoutUsecase()
+
+        getChatsUsecase.execute(::chatUpdateHandler)
     }
 
     override fun fabPressed() {
@@ -37,7 +47,6 @@ class MenuPresenterImpl(private val view: MenuView) : MenuPresenter {
     }
 
     override fun signoutPressed() {
-        SignoutUsecase().execute()
         view.gotoLogin()
     }
 
@@ -45,13 +54,13 @@ class MenuPresenterImpl(private val view: MenuView) : MenuPresenter {
         view.pickImage()
     }
 
-    private fun chatUpdateHandler(chatID: String, chat: ChatEntity) {
+    private fun chatUpdateHandler(chatID: String, chat: ChatDTO) {
         data[chatID] = chat
         updateData()
     }
 
     private fun updateData() {
-        val filteredData = mutableListOf<ChatEntity>()
+        val filteredData = mutableListOf<ChatDTO>()
         for (chat in data.values)
             if (chat.user?.nickname?.contains(query) == true)
                 filteredData.add(chat)

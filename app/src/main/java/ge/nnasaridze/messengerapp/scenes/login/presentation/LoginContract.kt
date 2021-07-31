@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.login
+package ge.nnasaridze.messengerapp.scenes.login.presentation
 
 interface LoginView{
     fun displayError(text: String)
@@ -16,4 +16,5 @@ interface LoginView{
 interface LoginPresenter{
     fun signinPressed()
     fun signupPressed()
+    fun viewInitialized()
 }

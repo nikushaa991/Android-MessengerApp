@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared
+package ge.nnasaridze.messengerapp.shared.utils
 
 const val EMAIL_SUFFIX = "@fake.fake"
 const val UNREGISTERED = "UNREGISTERED"
@@ -9,4 +9,9 @@ fun isValidCredential(credential: String): Any {
     return credential.isNotEmpty() &&
             credential.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
                 .length == credential.length
+}
+
+
+fun formatTime(time: Int): String {
+    return ""
 }

@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.login
+package ge.nnasaridze.messengerapp.scenes.login.presentation
 
 import android.content.Intent
 import android.os.Bundle
@@ -26,7 +26,10 @@ class MainActivity : LoginView, AppCompatActivity() {
         }
         supportActionBar?.hide()
         setContentView(binding.root)
+
+        presenter.viewInitialized()
     }
+
 
     override fun displayError(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
@@ -49,7 +52,7 @@ class MainActivity : LoginView, AppCompatActivity() {
         startActivity(Intent(this, MenuActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_TASK_ON_HOME
         })
-        this.finish();
+        this.finish()
     }
 
     override fun showLoading() {

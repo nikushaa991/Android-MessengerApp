@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.signup
 
-import ge.nnasaridze.messengerapp.shared.CREDENTIALS_ERROR
-import ge.nnasaridze.messengerapp.shared.repository.auth.Authenticator
-import ge.nnasaridze.messengerapp.shared.isValidCredential
+import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
+import ge.nnasaridze.messengerapp.shared.repositories.auth.Authenticator
+import ge.nnasaridze.messengerapp.shared.utils.isValidCredential
 
 
 class SignupPresenterImpl(private val view: SignupView) : SignupPresenter {

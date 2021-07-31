@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nnasaridze.messengerapp.databinding.FragmentConversationsBinding
+import ge.nnasaridze.messengerapp.shared.repositories.chats.ChatDTO
 
 class ConversationsFragment(private val handler: (position: Int) -> Unit) : Fragment() {
 
@@ -30,7 +31,7 @@ class ConversationsFragment(private val handler: (position: Int) -> Unit) : Frag
 
     }
 
-    fun updateConversations(data: ArrayList<Int>) {
+    fun updateConversations(data: List<ChatDTO>) {
         adapter.setData(data)
     }
 }
