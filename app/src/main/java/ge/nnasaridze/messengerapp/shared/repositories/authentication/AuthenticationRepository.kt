@@ -16,10 +16,11 @@ interface AuthenticationRepository {
     )
 
     fun register(
-        nickname: String, password: String,
+        nickname: String, password: String, profession: String,
         handler: (isSuccessful: Boolean) -> Unit
     )
 
+    fun isValidCredential(credential: String): Boolean
 }
 
 class DefaultAuthenticationRepository : AuthenticationRepository {
@@ -51,12 +52,20 @@ class DefaultAuthenticationRepository : AuthenticationRepository {
     override fun register(
         nickname: String,
         password: String,
+        profession: String,
         handler: (isSuccessful: Boolean) -> Unit
     ) {
         auth.createUserWithEmailAndPassword("$nickname$EMAIL_SUFFIX", password)
             .addOnCompleteListener { task ->
                 handler(task.isSuccessful)
             }
+        //TODO profession
+    }
+
+    override fun isValidCredential(credential: String): Boolean {
+        return credential.isNotEmpty() &&
+                credential.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
+                    .length == credential.length
     }
 }
 

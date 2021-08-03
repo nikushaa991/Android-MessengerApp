@@ -1,20 +1,20 @@
-package ge.nnasaridze.messengerapp.scenes.menu.presentation
+package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.ConversationsRecyclerItemBinding
-import ge.nnasaridze.messengerapp.scenes.menu.presentation.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
+import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 import ge.nnasaridze.messengerapp.shared.utils.formatTime
-import ge.nnasaridze.messengerapp.shared.repositories.chats.ChatDTO
 
 
 class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit) :
     RecyclerView.Adapter<ConversationsRecyclerViewHolder>() {
 
 
-    private var data: List<ChatDTO> = arrayListOf() //TODO
+    private var data: List<ChatEntity> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -27,7 +27,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
                 false
             )
         )
-        vh.itemView.setOnClickListener {    //TODO set on click
+        vh.itemView.setOnClickListener {
             handler(vh.adapterPosition)
         }
         return vh
@@ -44,7 +44,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
         return data.size
     }
 
-    fun setData(newData: List<ChatDTO>) {
+    fun setData(newData: List<ChatEntity>) {
         data = newData
     }
 
@@ -54,7 +54,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(data: ChatDTO) {
+        fun bind(data: ChatEntity) {
             with(binding) {
                 conversationsName.text = data.lastMessage?.message
                 conversationsProf.text = data.user?.profession

@@ -4,21 +4,30 @@ import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.DefaultGetChatsUseca
 import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.DefaultSignoutUsecase
 import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.GetChatsUsecase
 import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.SignoutUsecase
-import ge.nnasaridze.messengerapp.shared.repositories.chats.ChatDTO
+import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 
-class MenuPresenterImpl(private val view: MenuView) : MenuPresenter {
+class MenuPresenterImpl(private val view: MenuView) : MenuPresenter, CoroutineScope {
+    override val coroutineContext = Job() + Dispatchers.Default
 
     private val getChatsUsecase: GetChatsUsecase
     private val signoutUsecase: SignoutUsecase
 
-    private val data = mutableMapOf<String, ChatDTO>()
+    private val data = mutableMapOf<String, ChatEntity>()
     private var query = ""
 
     init {
         getChatsUsecase = DefaultGetChatsUsecase()
-        signoutUsecase  = DefaultSignoutUsecase()
+        signoutUsecase = DefaultSignoutUsecase()
+    }
 
-        getChatsUsecase.execute(::chatUpdateHandler)
+    override fun viewInitialized() {
+        getChatsUsecase.execute(
+            newChatHandler = ::newChatHandler,
+            updateChatHandler = ::updateChatHandler,
+        )
     }
 
     override fun fabPressed() {
@@ -47,6 +56,7 @@ class MenuPresenterImpl(private val view: MenuView) : MenuPresenter {
     }
 
     override fun signoutPressed() {
+        signoutUsecase.execute()
         view.gotoLogin()
     }
 
@@ -54,13 +64,18 @@ class MenuPresenterImpl(private val view: MenuView) : MenuPresenter {
         view.pickImage()
     }
 
-    private fun chatUpdateHandler(chatID: String, chat: ChatDTO) {
-        data[chatID] = chat
+    private fun newChatHandler(chatID: String) {
+        data[chatID] = ChatEntity()
+    }
+
+    private fun updateChatHandler(chat: ChatEntity) {
+        if (chat.chatID == null) return
+        data[chat.chatID] = chat
         updateData()
     }
 
     private fun updateData() {
-        val filteredData = mutableListOf<ChatDTO>()
+        val filteredData = mutableListOf<ChatEntity>()
         for (chat in data.values)
             if (chat.user?.nickname?.contains(query) == true)
                 filteredData.add(chat)

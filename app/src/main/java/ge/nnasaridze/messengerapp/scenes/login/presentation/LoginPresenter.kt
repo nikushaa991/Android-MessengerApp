@@ -1,17 +1,16 @@
 package ge.nnasaridze.messengerapp.scenes.login.presentation
 
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
-import ge.nnasaridze.messengerapp.shared.utils.isValidCredential
-import ge.nnasaridze.messengerapp.shared.repositories.Repository
+import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
 
 class LoginPresenterImpl(private val view: LoginView) : LoginPresenter {
-    private val repo = Repository.getInstance()
+    private val repo = DefaultAuthenticationRepository()
 
     override fun signinPressed() {
         val name = view.getNickname()
         val pass = view.getPassword()
 
-        if (isValidCredential(name) == false || isValidCredential(pass) == false) {
+        if (!repo.isValidCredential(name) || !repo.isValidCredential(pass)) {
             view.displayError(CREDENTIALS_ERROR)
             return
         }

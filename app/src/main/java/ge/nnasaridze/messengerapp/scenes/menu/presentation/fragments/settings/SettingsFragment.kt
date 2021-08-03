@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.menu.presentation
+package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -20,7 +20,7 @@ class SettingsFragment(
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         binding.settingsUpdateButton.setOnClickListener { updateHandler }

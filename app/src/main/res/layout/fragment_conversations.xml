@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".scenes.menu.presentation.ConversationsFragment">
+    tools:context=".scenes.menu.presentation.fragments.conversations.ConversationsFragment">
 
 
     <com.google.android.material.appbar.AppBarLayout

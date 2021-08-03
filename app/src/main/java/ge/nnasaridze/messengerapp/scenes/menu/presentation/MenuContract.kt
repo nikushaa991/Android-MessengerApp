@@ -1,12 +1,12 @@
 package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
-import ge.nnasaridze.messengerapp.shared.repositories.chats.ChatDTO
+import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 
 interface MenuView{
     fun gotoSearch()
 
     fun setConversationsFragment()
-    fun updateConversations(data: List<ChatDTO>)//TODO pass data
+    fun updateConversations(data: MutableList<ChatEntity>)
     fun gotoChat()
 
     fun setSettingsFragment()
@@ -14,7 +14,7 @@ interface MenuView{
     fun setProfession(profession: String)
     fun setImage(image: Int)//TODO drawable?
     fun pickImage() : Int//TODO idk how to yet
-    fun gotoLogin()//TODO signout?
+    fun gotoLogin()
 
     fun showLoading()
     fun hideLoading()
@@ -31,4 +31,5 @@ interface MenuPresenter{
     fun updatePressed()
     fun signoutPressed()
     fun imagePressed()
+    fun viewInitialized()
 }

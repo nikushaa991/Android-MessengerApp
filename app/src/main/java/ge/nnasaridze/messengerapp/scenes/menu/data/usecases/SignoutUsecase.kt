@@ -1,16 +1,13 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
-import ge.nnasaridze.messengerapp.scenes.menu.data.repositories.AuthRepository
+import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
 
 interface SignoutUsecase {
     fun execute()
 }
 
-class DefaultSignoutUsecase : SignoutUsecase{
-
-
-    private val repo = AuthRepository()
-
+class DefaultSignoutUsecase : SignoutUsecase {
+    private val repo = DefaultAuthenticationRepository()
     override fun execute() {
         repo.signout()
     }

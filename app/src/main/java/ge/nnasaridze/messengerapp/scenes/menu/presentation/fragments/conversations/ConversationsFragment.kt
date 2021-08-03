@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.menu.presentation
+package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,9 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nnasaridze.messengerapp.databinding.FragmentConversationsBinding
-import ge.nnasaridze.messengerapp.shared.repositories.chats.ChatDTO
 
-class ConversationsFragment(private val handler: (position: Int) -> Unit) : Fragment() {
+import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
+
+
+class ConversationsFragment(
+    private val onItemClickHandler: (position: Int) -> Unit,
+) : Fragment() {
 
 
     private lateinit var binding: FragmentConversationsBinding
@@ -26,12 +30,11 @@ class ConversationsFragment(private val handler: (position: Int) -> Unit) : Frag
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.conversationsRecycler.adapter = ConversationsRecyclerAdapter(handler)
+        binding.conversationsRecycler.adapter = ConversationsRecyclerAdapter(onItemClickHandler)
         binding.conversationsRecycler.layoutManager = LinearLayoutManager(activity)
-
     }
 
-    fun updateConversations(data: List<ChatDTO>) {
+    fun updateConversations(data: List<ChatEntity>) {
         adapter.setData(data)
     }
 }

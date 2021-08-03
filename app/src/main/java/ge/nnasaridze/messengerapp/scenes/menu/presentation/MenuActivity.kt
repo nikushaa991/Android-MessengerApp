@@ -8,13 +8,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import ge.nnasaridze.messengerapp.databinding.ActivityMenuBinding
 import ge.nnasaridze.messengerapp.scenes.chat.ChatActivity
 import ge.nnasaridze.messengerapp.scenes.login.presentation.MainActivity
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.ConversationsFragment
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings.SettingsFragment
 import ge.nnasaridze.messengerapp.scenes.search.SearchActivity
-import ge.nnasaridze.messengerapp.shared.repositories.chats.ChatDTO
+import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 
 class MenuActivity : MenuView, AppCompatActivity() {
 
@@ -27,12 +27,11 @@ class MenuActivity : MenuView, AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val auth = Firebase.auth
         binding = ActivityMenuBinding.inflate(layoutInflater)
         presenter = MenuPresenterImpl(this)
 
         with(binding) {
-            menuFab.setOnClickListener { auth.signOut() }//TODO
+            menuFab.setOnClickListener { fabPressed() }
 
             conversations = ConversationsFragment(::chatPressed)
             settings = SettingsFragment(::updatePressed, ::signoutPressed, ::imagePressed)
@@ -42,9 +41,9 @@ class MenuActivity : MenuView, AppCompatActivity() {
                 this@MenuActivity,
                 arrayListOf(conversations, settings)
             )
-
-
         }
+
+        presenter.viewInitialized()
 
         supportActionBar?.hide()
         setContentView(binding.root)
@@ -58,7 +57,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
         pager.currentItem = FRAGMENT_CONVERSATIONS
     }
 
-    override fun updateConversations(data: List<ChatDTO>) {
+    override fun updateConversations(data: MutableList<ChatEntity>) {
         conversations.updateConversations(data)
 
     }
@@ -99,6 +98,10 @@ class MenuActivity : MenuView, AppCompatActivity() {
         binding.menuPb.visibility = View.GONE
     }
 
+    private fun fabPressed() {
+        presenter.fabPressed()
+    }
+
     private fun chatPressed(position: Int) {
         presenter.chatPressed(position)
     }
@@ -111,10 +114,9 @@ class MenuActivity : MenuView, AppCompatActivity() {
         presenter.signoutPressed()
     }
 
-    private fun imagePressed(){
+    private fun imagePressed() {
         presenter.imagePressed()
     }
-
 
     class MenuFragmentsPagerAdapter(
         activity: FragmentActivity,

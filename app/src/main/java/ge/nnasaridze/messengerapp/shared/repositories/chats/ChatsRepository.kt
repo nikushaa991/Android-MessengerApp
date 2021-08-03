@@ -1,20 +1,32 @@
 package ge.nnasaridze.messengerapp.shared.repositories.chats
 
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
+import ge.nnasaridze.messengerapp.shared.entities.MessageEntity
+import ge.nnasaridze.messengerapp.shared.repositories.dtos.ChatDTO
+import ge.nnasaridze.messengerapp.shared.repositories.dtos.MessageDTO
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 interface ChatsRepository {
-    fun getUsersChatIDs(id: String): Flow<Result<List<String>>>
-    fun getChat(chatID: String): Flow<Result<ChatDTO>>
-    fun getMessages(chatID: String): Flow<Result<List<MessageDTO>>>
+    fun getAndSubscribeChatIDs(
+        id: String,
+        newChatIDHandler: (String) -> Unit
+    )
+    fun subscribeChat(chatID: String, handler: (ChatEntity) -> Unit)
+
+    fun getAndSubscribeMessages(
+        chatID: String,
+        newMessageHandler: (MessageEntity) -> Unit
+    )
 }
 
 class DefaultChatsRepository : ChatsRepository {
@@ -22,77 +34,76 @@ class DefaultChatsRepository : ChatsRepository {
 
     private val database = Firebase.database.reference
 
-    @ExperimentalCoroutinesApi
-    override fun getUsersChatIDs(id: String) = callbackFlow<Result<List<String>>> {
-
-        val postListener = object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.sendBlocking(Result.failure(error.toException()))
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val items = dataSnapshot.children.map { ds ->
-                    ds.value as String
+    override fun getAndSubscribeChatIDs(
+        id: String,
+        newChatIDHandler: (String) -> Unit
+    ) {
+        val listener = object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                val item = dataSnapshot.getValue(String::class.java)
+                if (item != null) {
+                    newChatIDHandler(item)
                 }
-                this@callbackFlow.sendBlocking(Result.success(items))
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onCancelled(error: DatabaseError) {
             }
         }
-        database.child("users").child(id).child("chatIDs")
-            .addValueEventListener(postListener)
-
-        awaitClose {
-            database.child("users").child(id).child("chatIDs")
-                .removeEventListener(postListener)
-        }
+        database.child("users").child(id).child("chatIDs").addChildEventListener(listener)
     }
 
 
-    @ExperimentalCoroutinesApi
-    override fun getChat(chatID: String) = callbackFlow<Result<ChatDTO>> {
-
-        val postListener = object : ValueEventListener {
+    override fun subscribeChat(chatID: String, handler: (ChatEntity) -> Unit) {
+        val listener = object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.sendBlocking(Result.failure(error.toException()))
             }
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val item = dataSnapshot.getValue(ChatDTO::class.java) ?: ChatDTO()
-
-                this@callbackFlow.sendBlocking(Result.success(item))
+                val item = dataSnapshot.getValue(ChatDTO::class.java)?.toEntity(chatID)
+                if (item != null) {
+                    handler(item)
+                }
             }
         }
         database.child("chats").child(chatID)
-            .addValueEventListener(postListener)
-
-        awaitClose {
-            database.child("chats").child(chatID)
-                .removeEventListener(postListener)
-        }
-
+            .addValueEventListener(listener)
     }
 
-    @ExperimentalCoroutinesApi
-    override fun getMessages(chatID: String) = callbackFlow<Result<List<MessageDTO>>> {
-
-        val postListener = object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                this@callbackFlow.sendBlocking(Result.failure(error.toException()))
+    override fun getAndSubscribeMessages(
+        chatID: String,
+        newMessageHandler: (MessageEntity) -> Unit
+    ) {
+        val listener = object : ChildEventListener {
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                val item = dataSnapshot.getValue(MessageDTO::class.java)?.toEntity()
+                if (item != null) {
+                    newMessageHandler(item)
+                }
             }
 
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val items = dataSnapshot.children.map { ds ->
-                    ds.getValue(MessageDTO::class.java)
-                }
-                this@callbackFlow.sendBlocking(Result.success(items.filterNotNull()))
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onCancelled(error: DatabaseError) {
             }
         }
         database.child("messages").child(chatID)
-            .addValueEventListener(postListener)
-
-        awaitClose {
-            database.child("messages").child(chatID)
-                .removeEventListener(postListener)
-        }
+            .addChildEventListener(listener)
     }
 }
 
