@@ -5,14 +5,15 @@ import ge.nnasaridze.messengerapp.shared.entities.MessageEntity
 
 @IgnoreExtraProperties
 data class MessageDTO(
-    val sender: String? = null,
-    val message: String? = null,
-    val timestamp: Int? = null
+    val senderID: String,
+    val text: String,
+    val timestamp: Int,
 ) {
-    fun toEntity(): MessageEntity {
+    fun toEntity(messageID: String): MessageEntity {
         return MessageEntity(
-            sender,
-            message,
+            messageID,
+            senderID,
+            text,
             timestamp,
         )
     }

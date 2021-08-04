@@ -1,5 +1,6 @@
 package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -31,10 +32,6 @@ class SettingsFragment(
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     fun setName(name: String) {
         binding.settingsName.setText(name)
     }
@@ -43,7 +40,7 @@ class SettingsFragment(
         binding.settingsProfession.setText(profession)
     }
 
-    fun setImage(image: Int) {
-        binding.settingsIcon.setImageResource(image)
+    fun setImage(image: Uri) {
+        binding.settingsIcon.setImageURI(image)
     }
 }

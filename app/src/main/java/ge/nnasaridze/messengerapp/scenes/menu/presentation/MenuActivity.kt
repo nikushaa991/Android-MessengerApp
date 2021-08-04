@@ -1,9 +1,11 @@
 package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -62,8 +64,11 @@ class MenuActivity : MenuView, AppCompatActivity() {
 
     }
 
-    override fun gotoChat() {
-        startActivity(Intent(this, ChatActivity::class.java))//TODO which chat?
+    override fun gotoChat(chatID: String) {
+        startActivity(
+            Intent(this, ChatActivity::class.java)
+                .putExtra("chatID", chatID)
+        )
     }
 
     override fun setSettingsFragment() {
@@ -78,12 +83,14 @@ class MenuActivity : MenuView, AppCompatActivity() {
         settings.setProfession(profession)
     }
 
-    override fun setImage(image: Int) {
+    override fun setImage(image: Uri) {
         settings.setImage(image)
     }
 
-    override fun pickImage(): Int {
-        TODO("Not yet implemented")
+    override fun pickImage() {
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            presenter.imagePicked(uri)
+        }.launch("image/*")
     }
 
     override fun gotoLogin() {
@@ -120,7 +127,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
 
     class MenuFragmentsPagerAdapter(
         activity: FragmentActivity,
-        private val fragments: ArrayList<Fragment>
+        private val fragments: ArrayList<Fragment>,
     ) : FragmentStateAdapter(activity) {
 
         override fun getItemCount() = fragments.size
@@ -132,4 +139,5 @@ class MenuActivity : MenuView, AppCompatActivity() {
         const val FRAGMENT_CONVERSATIONS = 0
         const val FRAGMENT_SETTINGS = 1
     }
+
 }

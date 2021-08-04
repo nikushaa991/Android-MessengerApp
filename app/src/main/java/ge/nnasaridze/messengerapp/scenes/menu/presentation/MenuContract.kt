@@ -1,26 +1,28 @@
 package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
+import android.net.Uri
 import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 
-interface MenuView{
+interface MenuView {
     fun gotoSearch()
 
     fun setConversationsFragment()
     fun updateConversations(data: MutableList<ChatEntity>)
-    fun gotoChat()
+    fun gotoChat(chatID: String)
 
     fun setSettingsFragment()
     fun setName(name: String)
     fun setProfession(profession: String)
-    fun setImage(image: Int)//TODO drawable?
-    fun pickImage() : Int//TODO idk how to yet
+    fun setImage(image: Uri)
+    fun pickImage()
     fun gotoLogin()
 
     fun showLoading()
     fun hideLoading()
 }
 
-interface MenuPresenter{
+interface MenuPresenter {
+    fun viewInitialized()
     fun fabPressed()
 
     fun homePressed()
@@ -31,5 +33,7 @@ interface MenuPresenter{
     fun updatePressed()
     fun signoutPressed()
     fun imagePressed()
-    fun viewInitialized()
+    fun imagePicked(uri: Uri?)
+
+
 }

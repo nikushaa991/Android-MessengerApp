@@ -1,33 +1,27 @@
 package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
-import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.DefaultGetChatsUsecase
-import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.DefaultSignoutUsecase
-import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.GetChatsUsecase
-import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.SignoutUsecase
+import android.net.Uri
+import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.*
 import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 
-class MenuPresenterImpl(private val view: MenuView) : MenuPresenter, CoroutineScope {
-    override val coroutineContext = Job() + Dispatchers.Default
+class MenuPresenterImpl(
+    private val view: MenuView,
+    private val getChatsUsecase: GetChatsUsecase = DefaultGetChatsUsecase(),
+    private val signoutUsecase: SignoutUsecase = DefaultSignoutUsecase(),
+    private val getUserUsecase: GetUserUsecase = DefaultGetUserUsecase(),
+    private val getLastMessageUsecase: GetLastMessageUsecase = DefaultGetLastMessageUsecase(),
+) : MenuPresenter {
 
-    private val getChatsUsecase: GetChatsUsecase
-    private val signoutUsecase: SignoutUsecase
 
-    private val data = mutableMapOf<String, ChatEntity>()
     private var query = ""
-
-    init {
-        getChatsUsecase = DefaultGetChatsUsecase()
-        signoutUsecase = DefaultSignoutUsecase()
-    }
+    private var filteredData = mutableListOf<ChatEntity>()
+    private val data = mutableMapOf<String, ChatEntity>()
 
     override fun viewInitialized() {
-        getChatsUsecase.execute(
-            newChatHandler = ::newChatHandler,
-            updateChatHandler = ::updateChatHandler,
-        )
+        view.showLoading()
+        getChatsUsecase.execute(::newChatHandler)
+        getUserUsecase
+        view.hideLoading()
     }
 
     override fun fabPressed() {
@@ -39,12 +33,13 @@ class MenuPresenterImpl(private val view: MenuView) : MenuPresenter, CoroutineSc
     }
 
     override fun chatPressed(position: Int) {
-        view.gotoChat()
+        val chatID = filteredData[position].chatID
+        view.gotoChat(chatID)
     }
 
     override fun searchEdited(text: String) {
         query = text
-        updateData()
+        refreshViewData()
     }
 
     override fun settingsPressed() {
@@ -64,22 +59,38 @@ class MenuPresenterImpl(private val view: MenuView) : MenuPresenter, CoroutineSc
         view.pickImage()
     }
 
+    override fun imagePicked(uri: Uri?) {
+        if (uri != null)
+            view.setImage(uri)
+    }
+
     private fun newChatHandler(chatID: String) {
-        data[chatID] = ChatEntity()
+        data[chatID] = ChatEntity(chatID)
+        getUserUsecase.execute(chatID) { userEntity ->
+            data[chatID]?.user = userEntity
+            refreshViewData()
+        }
+        getLastMessageUsecase.execute(chatID) { messageEntity ->
+            data[chatID]?.lastMessage = messageEntity
+            refreshViewData()
+        }
     }
 
-    private fun updateChatHandler(chat: ChatEntity) {
-        if (chat.chatID == null) return
-        data[chat.chatID] = chat
-        updateData()
-    }
-
-    private fun updateData() {
-        val filteredData = mutableListOf<ChatEntity>()
-        for (chat in data.values)
-            if (chat.user?.nickname?.contains(query) == true)
-                filteredData.add(chat)
-        filteredData.sortByDescending { it.lastMessage?.timestamp }
+    private fun refreshViewData() {
+        filterData()
         view.updateConversations(filteredData)
+    }
+
+    private fun filterData() {
+        val newFilteredData = mutableListOf<ChatEntity>()
+        for (chat in data.values) {
+            if (!chat.messageIsInitialized() || !chat.userIsInitialized())
+                continue
+            if (chat.user.nickname.contains(query))
+                newFilteredData.add(chat)
+        }
+        newFilteredData.sortByDescending { it.lastMessage.timestamp }
+        filteredData = newFilteredData
+        refreshViewData()
     }
 }

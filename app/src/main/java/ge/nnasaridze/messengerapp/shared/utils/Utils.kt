@@ -9,5 +9,7 @@ const val LAZY_LOADING_AMOUNT = 10
 
 
 fun formatTime(time: Int): String {
+    val curr = System.currentTimeMillis()
+
     return ""
 }

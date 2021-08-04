@@ -5,16 +5,17 @@ import ge.nnasaridze.messengerapp.shared.entities.UserEntity
 
 @IgnoreExtraProperties
 data class UserDTO(
-    val nickname: String? = null,
-    val profession: String? = null,
+    val nickname: String,
+    val profession: String,
     val chatIDs: List<String>? = null,
-    val imageID: Int? = null,
-)  {
-    fun toEntity(): UserEntity {
+    val imageID: Int,
+) {
+    fun toEntity(id: String): UserEntity {
         return UserEntity(
+            id,
             nickname,
             profession,
-            chatIDs,
-            imageID)
+            imageID
+        )
     }
 }

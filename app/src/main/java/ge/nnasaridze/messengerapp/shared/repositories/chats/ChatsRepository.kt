@@ -19,13 +19,19 @@ import kotlinx.coroutines.flow.callbackFlow
 interface ChatsRepository {
     fun getAndSubscribeChatIDs(
         id: String,
-        newChatIDHandler: (String) -> Unit
+        newChatIDHandler: (String) -> Unit,
     )
+
     fun subscribeChat(chatID: String, handler: (ChatEntity) -> Unit)
 
     fun getAndSubscribeMessages(
         chatID: String,
-        newMessageHandler: (MessageEntity) -> Unit
+        newMessageHandler: (MessageEntity) -> Unit,
+    )
+
+    fun subscribeLastMessage(
+        chatID: String,
+        handler: (MessageEntity) -> Unit,
     )
 }
 
@@ -36,7 +42,7 @@ class DefaultChatsRepository : ChatsRepository {
 
     override fun getAndSubscribeChatIDs(
         id: String,
-        newChatIDHandler: (String) -> Unit
+        newChatIDHandler: (String) -> Unit,
     ) {
         val listener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
@@ -80,11 +86,12 @@ class DefaultChatsRepository : ChatsRepository {
 
     override fun getAndSubscribeMessages(
         chatID: String,
-        newMessageHandler: (MessageEntity) -> Unit
+        newMessageHandler: (MessageEntity) -> Unit,
     ) {
         val listener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                val item = dataSnapshot.getValue(MessageDTO::class.java)?.toEntity()
+                val item =
+                    dataSnapshot.getValue(MessageDTO::class.java)?.toEntity(dataSnapshot.key ?: "")
                 if (item != null) {
                     newMessageHandler(item)
                 }
@@ -105,5 +112,29 @@ class DefaultChatsRepository : ChatsRepository {
         database.child("messages").child(chatID)
             .addChildEventListener(listener)
     }
+
+    override fun subscribeLastMessage(chatID: String, handler: (MessageEntity) -> Unit) {
+        val listener = object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val messageID = dataSnapshot.getValue(String::class.java)
+                if (messageID != null) {
+                    database.child("messages").child(chatID).child(messageID).get()
+                        .addOnSuccessListener { ds ->
+                            val message = ds.getValue(MessageDTO::class.java)?.toEntity(messageID)
+                            if (message != null) {
+                                handler(message)
+                            }
+                        }
+                }
+            }
+        }
+        database.child("chats").child(chatID).child("lastMessage")
+            .addValueEventListener(listener)
+    }
+
+
 }
 
