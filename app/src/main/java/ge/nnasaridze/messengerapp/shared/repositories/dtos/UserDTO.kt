@@ -8,14 +8,12 @@ data class UserDTO(
     val nickname: String,
     val profession: String,
     val chatIDs: List<String>? = null,
-    val imageID: Int,
 ) {
     fun toEntity(id: String): UserEntity {
         return UserEntity(
             id,
             nickname,
             profession,
-            imageID
         )
     }
 }

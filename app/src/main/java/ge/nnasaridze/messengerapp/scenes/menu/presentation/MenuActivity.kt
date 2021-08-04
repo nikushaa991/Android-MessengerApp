@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -49,6 +50,10 @@ class MenuActivity : MenuView, AppCompatActivity() {
 
         supportActionBar?.hide()
         setContentView(binding.root)
+    }
+
+    override fun displayError(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun gotoSearch() {

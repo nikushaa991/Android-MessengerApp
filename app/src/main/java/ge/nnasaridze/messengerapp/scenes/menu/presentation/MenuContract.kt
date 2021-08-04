@@ -4,8 +4,8 @@ import android.net.Uri
 import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 
 interface MenuView {
+    fun displayError(text: String)
     fun gotoSearch()
-
     fun setConversationsFragment()
     fun updateConversations(data: MutableList<ChatEntity>)
     fun gotoChat(chatID: String)

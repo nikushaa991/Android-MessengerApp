@@ -4,5 +4,4 @@ data class UserEntity(
     var userID: String,
     var nickname: String,
     var profession: String,
-    var imageID: Int,
 )
