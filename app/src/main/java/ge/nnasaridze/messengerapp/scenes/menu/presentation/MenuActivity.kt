@@ -21,6 +21,20 @@ import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 
 class MenuActivity : MenuView, AppCompatActivity() {
 
+    class MenuFragmentsPagerAdapter(
+        activity: FragmentActivity,
+        private val fragments: ArrayList<Fragment>,
+    ) : FragmentStateAdapter(activity) {
+
+        override fun getItemCount() = fragments.size
+
+        override fun createFragment(position: Int) = fragments[position]
+    }
+
+    companion object {
+        const val FRAGMENT_CONVERSATIONS = 0
+        const val FRAGMENT_SETTINGS = 1
+    }
 
     private lateinit var binding: ActivityMenuBinding
     private lateinit var presenter: MenuPresenter
@@ -36,7 +50,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
         with(binding) {
             menuFab.setOnClickListener { fabPressed() }
 
-            conversations = ConversationsFragment(::chatPressed)
+            conversations = ConversationsFragment(::chatPressed, ::scrolledToBottom)
             settings = SettingsFragment(::updatePressed, ::signoutPressed, ::imagePressed)
 
             pager = menuViewpager
@@ -84,8 +98,16 @@ class MenuActivity : MenuView, AppCompatActivity() {
         settings.setName(name)
     }
 
+    override fun getName(): String {
+        return settings.getName()
+    }
+
     override fun setProfession(profession: String) {
         settings.setProfession(profession)
+    }
+
+    override fun getProfession(): String {
+        return settings.getProfession()
     }
 
     override fun setImage(image: Uri) {
@@ -110,12 +132,17 @@ class MenuActivity : MenuView, AppCompatActivity() {
         binding.menuPb.visibility = View.GONE
     }
 
+
     private fun fabPressed() {
         presenter.fabPressed()
     }
 
     private fun chatPressed(position: Int) {
         presenter.chatPressed(position)
+    }
+
+    private fun scrolledToBottom() {
+        presenter.scrolledToBottom()
     }
 
     private fun updatePressed() {
@@ -129,20 +156,4 @@ class MenuActivity : MenuView, AppCompatActivity() {
     private fun imagePressed() {
         presenter.imagePressed()
     }
-
-    class MenuFragmentsPagerAdapter(
-        activity: FragmentActivity,
-        private val fragments: ArrayList<Fragment>,
-    ) : FragmentStateAdapter(activity) {
-
-        override fun getItemCount() = fragments.size
-
-        override fun createFragment(position: Int) = fragments[position]
-    }
-
-    companion object {
-        const val FRAGMENT_CONVERSATIONS = 0
-        const val FRAGMENT_SETTINGS = 1
-    }
-
 }

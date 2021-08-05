@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nnasaridze.messengerapp.databinding.FragmentConversationsBinding
-
 import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
+import androidx.recyclerview.widget.RecyclerView
+
 
 
 class ConversationsFragment(
     private val onItemClickHandler: (position: Int) -> Unit,
+    private val scrolledToBottomHandler: () -> Unit,
 ) : Fragment() {
 
 
@@ -21,7 +23,7 @@ class ConversationsFragment(
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentConversationsBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,6 +34,12 @@ class ConversationsFragment(
 
         binding.conversationsRecycler.adapter = ConversationsRecyclerAdapter(onItemClickHandler)
         binding.conversationsRecycler.layoutManager = LinearLayoutManager(activity)
+        binding.conversationsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!recyclerView.canScrollVertically(1) && dy > 0)
+                    scrolledToBottomHandler()
+            }
+        })
     }
 
     fun updateConversations(data: List<ChatEntity>) {

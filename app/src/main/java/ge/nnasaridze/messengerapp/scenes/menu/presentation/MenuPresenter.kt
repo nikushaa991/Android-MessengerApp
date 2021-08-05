@@ -6,6 +6,7 @@ import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 import ge.nnasaridze.messengerapp.shared.entities.UserEntity
 import ge.nnasaridze.messengerapp.shared.repositories.authentication.AuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
 
 class MenuPresenterImpl(
     private val view: MenuView,
@@ -15,21 +16,20 @@ class MenuPresenterImpl(
     private val uploadImageUsecase: UploadImageUsecase = DefaultUploadImageUsecase(),
     private val getImageUsecase: GetImageUsecase = DefaultGetImageUsecase(),
     private val signoutUsecase: SignoutUsecase = DefaultSignoutUsecase(),
+    private val updateDataUsecase: UpdateDataUsecase = DefaultUpdateDataUsecase(),
     private val authRepo: AuthenticationRepository = DefaultAuthenticationRepository(),
 ) : MenuPresenter {
 
-
+    private val data = mutableMapOf<String, ChatEntity>()
     private var searchQuery = ""
     private var filteredData = mutableListOf<ChatEntity>()
-    private val data = mutableMapOf<String, ChatEntity>()
+    private var chatAmount = 0
+
     private lateinit var user: UserEntity
     private lateinit var newImage: Uri
 
     override fun viewInitialized() {
-        view.showLoading()
-        getChatsUsecase.execute(::newChatHandler)
-        getUserUsecase.execute(authRepo.getID(), ::setupUserData)
-        view.hideLoading()
+        loadNewChats()
     }
 
     override fun fabPressed() {
@@ -50,7 +50,15 @@ class MenuPresenterImpl(
         refreshViewData()
     }
 
+    override fun scrolledToBottom() {
+        loadNewChats()
+    }
+
     override fun settingsPressed() {
+        if (!::user.isInitialized) {
+            view.showLoading()
+            getUserUsecase.execute(authRepo.getID(), ::setupUserData)
+        }
         view.setSettingsFragment()
     }
 
@@ -62,6 +70,11 @@ class MenuPresenterImpl(
                     view.displayError("Image upload failed")
                 view.hideLoading()
             }
+        }
+        if (::user.isInitialized) {
+            val newData = UserEntity(user.userID, view.getName(), view.getProfession())
+            if (user.nickname != newData.nickname || user.profession != newData.profession)
+                updateDataUsecase.execute(newData)
         }
 
     }
@@ -92,6 +105,9 @@ class MenuPresenterImpl(
             data[chatID]?.lastMessage = messageEntity
             refreshViewData()
         }
+
+        if (data.size == chatAmount)
+            view.hideLoading()
     }
 
     private fun refreshViewData() {
@@ -113,13 +129,21 @@ class MenuPresenterImpl(
     }
 
     private fun setupUserData(userEntity: UserEntity) {
-        if (!::user.isInitialized)
+        view.setName(user.nickname)
+        view.setProfession(user.profession)
+
+        if (!::user.isInitialized) {
+            view.hideLoading()
             getImageUsecase.execute(userEntity.userID) { uri ->
                 view.setImage(uri)
             }
-
+        }
         user = userEntity
-        view.setName(user.nickname)
-        view.setProfession(user.profession)
+    }
+
+    private fun loadNewChats() {
+        view.showLoading()
+        chatAmount += LAZY_LOADING_AMOUNT
+        getChatsUsecase.execute(chatAmount, ::newChatHandler)
     }
 }

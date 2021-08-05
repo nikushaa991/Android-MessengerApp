@@ -10,15 +10,12 @@ import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
 import ge.nnasaridze.messengerapp.shared.entities.MessageEntity
 import ge.nnasaridze.messengerapp.shared.repositories.dtos.ChatDTO
 import ge.nnasaridze.messengerapp.shared.repositories.dtos.MessageDTO
-import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.flow.callbackFlow
 
 interface ChatsRepository {
     fun getAndSubscribeChatIDs(
         id: String,
+        start: Int = 0,
+        end: Int = 0,
         newChatIDHandler: (String) -> Unit,
     )
 
@@ -42,12 +39,17 @@ class DefaultChatsRepository : ChatsRepository {
 
     override fun getAndSubscribeChatIDs(
         id: String,
+        start: Int,
+        end: Int,
         newChatIDHandler: (String) -> Unit,
-    ) {
+
+        ) {
         val listener = object : ChildEventListener {
+            private var count = 0
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val item = dataSnapshot.getValue(String::class.java)
-                if (item != null) {
+                if (item != null && count >= start) {
+                    count++
                     newChatIDHandler(item)
                 }
             }
@@ -64,7 +66,12 @@ class DefaultChatsRepository : ChatsRepository {
             override fun onCancelled(error: DatabaseError) {
             }
         }
-        database.child("users").child(id).child("chatIDs").addChildEventListener(listener)
+        val ref = database.child("users").child(id).child("chatIDs")
+
+        if (end != 0)
+            ref.limitToFirst(end).addChildEventListener(listener)
+        else
+            ref.addChildEventListener(listener)
     }
 
 

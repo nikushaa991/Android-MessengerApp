@@ -13,14 +13,14 @@ import ge.nnasaridze.messengerapp.databinding.FragmentSettingsBinding
 class SettingsFragment(
     private val updateHandler: () -> Unit,
     private val signoutHandler: () -> Unit,
-    private val imageHandler: () -> Unit
+    private val imageHandler: () -> Unit,
 ) : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
@@ -42,5 +42,13 @@ class SettingsFragment(
 
     fun setImage(image: Uri) {
         binding.settingsIcon.setImageURI(image)
+    }
+
+    fun getName(): String {
+        return binding.settingsName.text.toString()
+    }
+
+    fun getProfession(): String {
+        return binding.settingsProfession.text.toString()
     }
 }

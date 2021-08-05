@@ -12,7 +12,9 @@ interface MenuView {
 
     fun setSettingsFragment()
     fun setName(name: String)
+    fun getName(): String
     fun setProfession(profession: String)
+    fun getProfession(): String
     fun setImage(image: Uri)
     fun pickImage()
     fun gotoLogin()
@@ -28,6 +30,7 @@ interface MenuPresenter {
     fun homePressed()
     fun chatPressed(position: Int)
     fun searchEdited(text: String)
+    fun scrolledToBottom()
 
     fun settingsPressed()
     fun updatePressed()
