@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.signup
+package ge.nnasaridze.messengerapp.scenes.signup.presentation
 
 interface SignupView{
     fun displayError(text: String)

@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ge.nnasaridze.messengerapp.databinding.ActivityMainBinding
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.MenuActivity
-import ge.nnasaridze.messengerapp.scenes.signup.SignupActivity
+import ge.nnasaridze.messengerapp.scenes.signup.presentation.SignupActivity
 
 class MainActivity : LoginView, AppCompatActivity() {
 

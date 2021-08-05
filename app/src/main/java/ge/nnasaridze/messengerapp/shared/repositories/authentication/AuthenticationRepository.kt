@@ -12,13 +12,15 @@ interface AuthenticationRepository {
 
     fun authenticate(
         nickname: String, password: String,
-        handler: (isSuccessful: Boolean) -> Unit
+        handler: (isSuccessful: Boolean) -> Unit,
     )
 
     fun register(
-        nickname: String, password: String, profession: String,
-        handler: (isSuccessful: Boolean) -> Unit
+        nickname: String, password: String,
+        handler: (isSuccessful: Boolean) -> Unit,
     )
+
+    fun updateName(nickname: String, handler: (isSuccessful: Boolean) -> Unit)
 
     fun isValidCredential(credential: String): Boolean
 }
@@ -39,7 +41,7 @@ class DefaultAuthenticationRepository : AuthenticationRepository {
     override fun authenticate(
         nickname: String,
         password: String,
-        handler: (isSuccessful: Boolean) -> Unit
+        handler: (isSuccessful: Boolean) -> Unit,
     ) {
         auth.signInWithEmailAndPassword("$nickname$EMAIL_SUFFIX", password)
             .addOnCompleteListener { task -> handler(task.isSuccessful) }
@@ -52,14 +54,18 @@ class DefaultAuthenticationRepository : AuthenticationRepository {
     override fun register(
         nickname: String,
         password: String,
-        profession: String,
-        handler: (isSuccessful: Boolean) -> Unit
+        handler: (isSuccessful: Boolean) -> Unit,
     ) {
         auth.createUserWithEmailAndPassword("$nickname$EMAIL_SUFFIX", password)
             .addOnCompleteListener { task ->
                 handler(task.isSuccessful)
             }
-        //TODO profession
+    }
+
+    override fun updateName(nickname: String, handler: (isSuccessful: Boolean) -> Unit) {
+        auth.currentUser!!.updateEmail("$nickname$EMAIL_SUFFIX").addOnCompleteListener { task ->
+            handler(task.isSuccessful)
+        }
     }
 
     override fun isValidCredential(credential: String): Boolean {

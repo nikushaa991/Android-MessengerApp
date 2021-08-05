@@ -9,9 +9,14 @@ import ge.nnasaridze.messengerapp.shared.entities.UserEntity
 import ge.nnasaridze.messengerapp.shared.repositories.dtos.UserDTO
 
 interface UsersRepository {
+    fun upsertUser(
+        user: UserEntity,
+        handler: (isSuccessful: Boolean) -> Unit,
+    )
+
     fun subscribeUser(
         id: String,
-        handler: (UserEntity) -> Unit
+        handler: (UserEntity) -> Unit,
     )
 }
 
@@ -19,6 +24,18 @@ class DefaultUsersRepository : UsersRepository {
 
 
     private val database = Firebase.database.reference
+
+    override fun upsertUser(user: UserEntity, handler: (isSuccessful: Boolean) -> Unit) {
+        val userRef = database.child("users").child(user.userID)
+        userRef.child("nickname").setValue(user.nickname).addOnCompleteListener { task ->
+            if (!task.isSuccessful)
+                handler(false)
+            else
+                userRef.child("profession").setValue(user.profession)
+                    .addOnCompleteListener { handler(it.isSuccessful) }
+        }
+    }
+
     override fun subscribeUser(id: String, handler: (UserEntity) -> Unit) {
         val listener = object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {

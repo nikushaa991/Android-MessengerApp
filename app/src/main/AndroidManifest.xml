@@ -12,7 +12,7 @@
         <activity android:name=".scenes.chat.ChatActivity"></activity>
         <activity android:name=".scenes.search.SearchActivity" />
         <activity android:name=".scenes.menu.presentation.MenuActivity" />
-        <activity android:name=".scenes.signup.SignupActivity" />
+        <activity android:name=".scenes.signup.presentation.SignupActivity" />
         <activity android:name=".scenes.login.presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

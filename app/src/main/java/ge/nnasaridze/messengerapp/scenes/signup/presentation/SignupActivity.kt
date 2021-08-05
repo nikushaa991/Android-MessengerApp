@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.scenes.signup
+package ge.nnasaridze.messengerapp.scenes.signup.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

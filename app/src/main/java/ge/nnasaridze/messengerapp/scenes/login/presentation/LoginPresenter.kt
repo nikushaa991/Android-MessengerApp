@@ -1,10 +1,19 @@
 package ge.nnasaridze.messengerapp.scenes.login.presentation
 
+import ge.nnasaridze.messengerapp.shared.repositories.authentication.AuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
 import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
 
-class LoginPresenterImpl(private val view: LoginView) : LoginPresenter {
-    private val repo = DefaultAuthenticationRepository()
+class LoginPresenterImpl(
+    private val view: LoginView,
+    private val repo: AuthenticationRepository = DefaultAuthenticationRepository(),
+) : LoginPresenter {
+
+
+    override fun viewInitialized() {
+        if (repo.isAuthenticated())
+            view.gotoMenu()
+    }
 
     override fun signinPressed() {
         val name = view.getNickname()
@@ -16,21 +25,19 @@ class LoginPresenterImpl(private val view: LoginView) : LoginPresenter {
         }
 
         view.showLoading()
-        repo.authenticate(name, pass) { isSuccessful ->
-            view.hideLoading()
-            if (isSuccessful)
-                view.gotoMenu()
-            else
-                view.displayError("Authentication failed")
-        }
+        repo.authenticate(name, pass, ::onAuthentication)
     }
 
     override fun signupPressed() {
         view.gotoSignup()
     }
 
-    override fun viewInitialized() {
-        if (repo.isAuthenticated())
+    private fun onAuthentication(isSuccessful: Boolean) {
+        view.hideLoading()
+        if (isSuccessful)
             view.gotoMenu()
+        else
+            view.displayError("Authentication failed")
     }
+
 }
