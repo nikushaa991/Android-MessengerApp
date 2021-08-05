@@ -56,9 +56,9 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
 
         fun bind(data: ChatEntity) {
             with(binding) {
-                conversationsName.text = data.lastMessage?.message
-                conversationsProf.text = data.user?.profession
-                conversationsTime.text = formatTime(data.lastMessage?.timestamp ?: 0)
+                conversationsName.text = data.lastMessage.text
+                conversationsProf.text = data.user.profession
+                conversationsTime.text = formatTime(data.lastMessage.timestamp)
                 conversationsIcon.setImageResource(R.drawable.avatar_image_placeholder)
             }
         }

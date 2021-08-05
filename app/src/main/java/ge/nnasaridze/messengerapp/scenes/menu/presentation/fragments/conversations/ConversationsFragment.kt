@@ -31,8 +31,8 @@ class ConversationsFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.conversationsRecycler.adapter = ConversationsRecyclerAdapter(onItemClickHandler)
+        adapter = ConversationsRecyclerAdapter (onItemClickHandler)
+        binding.conversationsRecycler.adapter = adapter
         binding.conversationsRecycler.layoutManager = LinearLayoutManager(activity)
         binding.conversationsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

@@ -23,6 +23,8 @@ interface ChatsRepository {
 
     fun getAndSubscribeMessages(
         chatID: String,
+        start: Int,
+        end: Int,
         newMessageHandler: (MessageEntity) -> Unit,
     )
 
@@ -93,13 +95,17 @@ class DefaultChatsRepository : ChatsRepository {
 
     override fun getAndSubscribeMessages(
         chatID: String,
+        start: Int,
+        end: Int,
         newMessageHandler: (MessageEntity) -> Unit,
     ) {
         val listener = object : ChildEventListener {
+            private var count = 0
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val item =
                     dataSnapshot.getValue(MessageDTO::class.java)?.toEntity(dataSnapshot.key ?: "")
-                if (item != null) {
+                if (item != null && count >= start) {
+                    count++
                     newMessageHandler(item)
                 }
             }
@@ -116,8 +122,13 @@ class DefaultChatsRepository : ChatsRepository {
             override fun onCancelled(error: DatabaseError) {
             }
         }
-        database.child("messages").child(chatID)
-            .addChildEventListener(listener)
+        val ref = database.child("messages").child(chatID)
+
+
+        if (end != 0)
+            ref.limitToFirst(end).addChildEventListener(listener)
+        else
+            ref.addChildEventListener(listener)
     }
 
     override fun subscribeLastMessage(chatID: String, handler: (MessageEntity) -> Unit) {

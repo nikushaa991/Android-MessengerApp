@@ -13,3 +13,9 @@ fun formatTime(time: Int): String {
 
     return ""
 }
+
+fun formatChatTime(time: Int): String {
+    val curr = System.currentTimeMillis()
+
+    return ""
+}

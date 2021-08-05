@@ -32,11 +32,11 @@ class DefaultRegisterUsecase : RegisterUsecase {
             return
         }
         authRepo.register(name, pass) { isSuccessful ->
-            if (!isSuccessful)
+            if (!isSuccessful) {
                 handler(false, "Registration error")
-            else {
+            } else {
                 val entity = UserEntity(authRepo.getID(), name, prof)
-                usersRepo.upsertUser(entity) {
+                usersRepo.createUser(entity) {
                     handler(it, "")
                 }
             }

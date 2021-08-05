@@ -11,7 +11,6 @@ data class MessageDTO(
 ) {
     fun toEntity(messageID: String): MessageEntity {
         return MessageEntity(
-            messageID,
             senderID,
             text,
             timestamp,

@@ -73,10 +73,15 @@ class MenuPresenterImpl(
         }
         if (::user.isInitialized) {
             val newData = UserEntity(user.userID, view.getName(), view.getProfession())
-            if (user.nickname != newData.nickname || user.profession != newData.profession)
-                updateDataUsecase.execute(newData)
+            if (user.nickname != newData.nickname || user.profession != newData.profession) {
+                view.showLoading()
+                updateDataUsecase.execute(newData) { isSuccessful ->
+                    if (!isSuccessful)
+                        view.displayError("Update Failed")
+                    view.hideLoading()
+                }
+            }
         }
-
     }
 
     override fun signoutPressed() {
@@ -142,6 +147,8 @@ class MenuPresenterImpl(
     }
 
     private fun loadNewChats() {
+        if (data.size < chatAmount)
+            return
         view.showLoading()
         chatAmount += LAZY_LOADING_AMOUNT
         getChatsUsecase.execute(chatAmount, ::newChatHandler)

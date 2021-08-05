@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".scenes.chat.ChatActivity">
+    tools:context=".scenes.chat.presentation.ChatActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -72,6 +72,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
+            android:id="@+id/chat_text"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/chat_margin"
@@ -81,7 +82,7 @@
             android:inputType="text" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/chat_send"
             android:layout_width="@dimen/chat_radius"
             android:layout_height="@dimen/chat_radius"
             android:layout_gravity="center_vertical"

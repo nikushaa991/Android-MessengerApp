@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import ge.nnasaridze.messengerapp.databinding.ActivityMenuBinding
-import ge.nnasaridze.messengerapp.scenes.chat.ChatActivity
+import ge.nnasaridze.messengerapp.scenes.chat.presentation.ChatActivity
 import ge.nnasaridze.messengerapp.scenes.login.presentation.MainActivity
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.ConversationsFragment
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings.SettingsFragment

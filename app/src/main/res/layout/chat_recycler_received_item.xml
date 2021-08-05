@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/chat_padding">
 
     <TextView
-        android:id="@+id/sent_chat_text"
+        android:id="@+id/received_chat_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/textview_left"
@@ -18,7 +18,7 @@
         tools:text="mishvelet gtxovt" />
 
     <TextView
-        android:id="@+id/sent_chat_time"
+        android:id="@+id/received_chat_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/chat_padding"
