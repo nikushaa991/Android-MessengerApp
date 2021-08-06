@@ -10,7 +10,7 @@
     android:layout_marginRight="@dimen/search_margin_big">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/login_icon"
+        android:id="@+id/search_icon"
         android:layout_width="@dimen/search_icon_size"
         android:layout_height="@dimen/search_icon_size"
         android:contentDescription="@string/ellipses"
@@ -22,10 +22,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:orientation="vertical"
+        android:layout_marginStart="@dimen/search_margin_small"
         android:layout_marginLeft="@dimen/search_margin_small"
-        android:layout_marginStart="@dimen/search_margin_small">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/search_name"

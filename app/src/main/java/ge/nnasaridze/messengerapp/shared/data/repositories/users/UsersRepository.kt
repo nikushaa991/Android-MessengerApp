@@ -1,12 +1,12 @@
-package ge.nnasaridze.messengerapp.shared.repositories.users
+package ge.nnasaridze.messengerapp.shared.data.repositories.users
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import ge.nnasaridze.messengerapp.shared.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.repositories.dtos.UserDTO
+import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import ge.nnasaridze.messengerapp.shared.data.repositories.dtos.UserDTO
 
 interface UsersRepository {
     fun createUser(
@@ -39,14 +39,16 @@ class DefaultUsersRepository : UsersRepository {
 
 
     override fun updateUser(user: UserEntity, handler: (isSuccessful: Boolean) -> Unit) {
-        val userRef = database.child("users").child(user.userID)
-        userRef.child("nickname").setValue(user.nickname).addOnCompleteListener { task ->
-            if (!task.isSuccessful)
-                handler(false)
-            else
-                userRef.child("profession").setValue(user.profession)
-                    .addOnCompleteListener { handler(it.isSuccessful) }
-        }
+
+        val childUpdates = hashMapOf<String, Any>(
+            "/users/${user.userID}/nickname" to user.nickname,
+            "/users/${user.userID}/profession" to user.profession
+        )
+
+        database.updateChildren(childUpdates)
+            .addOnCompleteListener { task ->
+                handler(task.isSuccessful)
+            }
     }
 
     override fun subscribeUser(id: String, handler: (UserEntity) -> Unit) {

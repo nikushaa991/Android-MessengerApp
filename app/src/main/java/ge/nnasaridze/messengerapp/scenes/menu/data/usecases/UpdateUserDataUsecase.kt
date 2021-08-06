@@ -1,16 +1,16 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
 
-interface UpdateDataUsecase {
+interface UpdateUserDataUsecase {
     fun execute(
         user: UserEntity,
         handler: (isSuccessful: Boolean) -> Unit,
     )
 }
 
-class DefaultUpdateDataUsecase : UpdateDataUsecase {
+class DefaultUpdateUserDataUsecase : UpdateUserDataUsecase {
 
 
     private val usersRepo = DefaultUsersRepository()

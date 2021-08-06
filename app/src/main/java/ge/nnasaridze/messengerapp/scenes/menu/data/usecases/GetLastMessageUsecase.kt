@@ -1,7 +1,7 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.entities.MessageEntity
-import ge.nnasaridze.messengerapp.shared.repositories.chats.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
+import ge.nnasaridze.messengerapp.shared.data.repositories.chats.DefaultChatsRepository
 
 interface GetLastMessageUsecase {
     fun execute(chatID: String, handler: (message: MessageEntity) -> Unit)

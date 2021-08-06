@@ -2,11 +2,11 @@ package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings
 
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.fragment.app.Fragment
 import ge.nnasaridze.messengerapp.databinding.FragmentSettingsBinding
 
 

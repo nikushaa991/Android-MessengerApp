@@ -2,34 +2,36 @@ package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.net.Uri
 import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.*
-import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
-import ge.nnasaridze.messengerapp.shared.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.repositories.authentication.AuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
+import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
+import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.AuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.usecases.DefaultGetImageUsecase
+import ge.nnasaridze.messengerapp.shared.data.usecases.DefaultGetUserUsecase
+import ge.nnasaridze.messengerapp.shared.data.usecases.GetImageUsecase
+import ge.nnasaridze.messengerapp.shared.data.usecases.GetUserUsecase
 
 class MenuPresenterImpl(
     private val view: MenuView,
     private val getUserUsecase: GetUserUsecase = DefaultGetUserUsecase(),
-    private val getChatsUsecase: GetChatsUsecase = DefaultGetChatsUsecase(),
+    private val getChatIDsUsecase: GetChatIDsUsecase = DefaultGetChatIDsUsecase(),
     private val getLastMessageUsecase: GetLastMessageUsecase = DefaultGetLastMessageUsecase(),
     private val uploadImageUsecase: UploadImageUsecase = DefaultUploadImageUsecase(),
     private val getImageUsecase: GetImageUsecase = DefaultGetImageUsecase(),
     private val signoutUsecase: SignoutUsecase = DefaultSignoutUsecase(),
-    private val updateDataUsecase: UpdateDataUsecase = DefaultUpdateDataUsecase(),
+    private val updateUserDataUsecase: UpdateUserDataUsecase = DefaultUpdateUserDataUsecase(),
     private val authRepo: AuthenticationRepository = DefaultAuthenticationRepository(),
 ) : MenuPresenter {
 
     private val data = mutableMapOf<String, ChatEntity>()
     private var searchQuery = ""
     private var filteredData = mutableListOf<ChatEntity>()
-    private var chatAmount = 0
 
     private lateinit var user: UserEntity
     private lateinit var newImage: Uri
 
     override fun viewInitialized() {
-        loadNewChats()
+        loadChats()
     }
 
     override fun fabPressed() {
@@ -42,16 +44,13 @@ class MenuPresenterImpl(
 
     override fun chatPressed(position: Int) {
         val chatID = filteredData[position].chatID
-        view.gotoChat(chatID)
+        val recipientID = filteredData[position].user.userID
+        view.gotoChat(chatID, recipientID)
     }
 
     override fun searchEdited(text: String) {
         searchQuery = text
         refreshViewData()
-    }
-
-    override fun scrolledToBottom() {
-        loadNewChats()
     }
 
     override fun settingsPressed() {
@@ -75,7 +74,7 @@ class MenuPresenterImpl(
             val newData = UserEntity(user.userID, view.getName(), view.getProfession())
             if (user.nickname != newData.nickname || user.profession != newData.profession) {
                 view.showLoading()
-                updateDataUsecase.execute(newData) { isSuccessful ->
+                updateUserDataUsecase.execute(newData) { isSuccessful ->
                     if (!isSuccessful)
                         view.displayError("Update Failed")
                     view.hideLoading()
@@ -110,9 +109,6 @@ class MenuPresenterImpl(
             data[chatID]?.lastMessage = messageEntity
             refreshViewData()
         }
-
-        if (data.size == chatAmount)
-            view.hideLoading()
     }
 
     private fun refreshViewData() {
@@ -146,11 +142,7 @@ class MenuPresenterImpl(
         user = userEntity
     }
 
-    private fun loadNewChats() {
-        if (data.size < chatAmount)
-            return
-        view.showLoading()
-        chatAmount += LAZY_LOADING_AMOUNT
-        getChatsUsecase.execute(chatAmount, ::newChatHandler)
+    private fun loadChats() {
+        getChatIDsUsecase.execute(::newChatHandler)
     }
 }

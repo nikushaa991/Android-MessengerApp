@@ -2,11 +2,11 @@ package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -16,8 +16,8 @@ import ge.nnasaridze.messengerapp.scenes.chat.presentation.ChatActivity
 import ge.nnasaridze.messengerapp.scenes.login.presentation.MainActivity
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.ConversationsFragment
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings.SettingsFragment
-import ge.nnasaridze.messengerapp.scenes.search.SearchActivity
-import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
+import ge.nnasaridze.messengerapp.scenes.search.presentation.SearchActivity
+import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
 
 class MenuActivity : MenuView, AppCompatActivity() {
 
@@ -25,9 +25,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
         activity: FragmentActivity,
         private val fragments: ArrayList<Fragment>,
     ) : FragmentStateAdapter(activity) {
-
         override fun getItemCount() = fragments.size
-
         override fun createFragment(position: Int) = fragments[position]
     }
 
@@ -50,7 +48,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
         with(binding) {
             menuFab.setOnClickListener { fabPressed() }
 
-            conversations = ConversationsFragment(::chatPressed, ::scrolledToBottom)
+            conversations = ConversationsFragment(::chatPressed, ::onTextChanged)
             settings = SettingsFragment(::updatePressed, ::signoutPressed, ::imagePressed)
 
             pager = menuViewpager
@@ -58,6 +56,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
                 this@MenuActivity,
                 arrayListOf(conversations, settings)
             )
+            //todo viewpager behavior?
         }
 
         presenter.viewInitialized()
@@ -83,10 +82,11 @@ class MenuActivity : MenuView, AppCompatActivity() {
 
     }
 
-    override fun gotoChat(chatID: String) {
+    override fun gotoChat(chatID: String, recipientID: String) {
         startActivity(
             Intent(this, ChatActivity::class.java)
                 .putExtra("chatID", chatID)
+                .putExtra("recipientID", recipientID)
         )
     }
 
@@ -121,7 +121,10 @@ class MenuActivity : MenuView, AppCompatActivity() {
     }
 
     override fun gotoLogin() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_TASK_ON_HOME
+        })
+        this.finish()
     }
 
     override fun showLoading() {
@@ -141,8 +144,8 @@ class MenuActivity : MenuView, AppCompatActivity() {
         presenter.chatPressed(position)
     }
 
-    private fun scrolledToBottom() {
-        presenter.scrolledToBottom()
+    private fun onTextChanged(text: String){
+        presenter.searchEdited(text)
     }
 
     private fun updatePressed() {

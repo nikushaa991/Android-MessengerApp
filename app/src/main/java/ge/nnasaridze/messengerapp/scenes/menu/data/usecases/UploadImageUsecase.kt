@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
 import android.net.Uri
-import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.repositories.pictures.DefaultPicturesRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 
 interface UploadImageUsecase {
     fun execute(uri: Uri, handler: (isSuccessful: Boolean) -> Unit)

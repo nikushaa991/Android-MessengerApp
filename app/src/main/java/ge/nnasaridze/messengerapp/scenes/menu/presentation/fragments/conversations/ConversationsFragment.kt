@@ -1,20 +1,18 @@
 package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nnasaridze.messengerapp.databinding.FragmentConversationsBinding
-import ge.nnasaridze.messengerapp.shared.entities.ChatEntity
-import androidx.recyclerview.widget.RecyclerView
-
+import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
 
 
 class ConversationsFragment(
     private val onItemClickHandler: (position: Int) -> Unit,
-    private val scrolledToBottomHandler: () -> Unit,
+    private val onSearchChangedHandler: (text: String) -> Unit,
 ) : Fragment() {
 
 
@@ -31,15 +29,11 @@ class ConversationsFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = ConversationsRecyclerAdapter (onItemClickHandler)
+        adapter = ConversationsRecyclerAdapter(onItemClickHandler)
         binding.conversationsRecycler.adapter = adapter
         binding.conversationsRecycler.layoutManager = LinearLayoutManager(activity)
-        binding.conversationsRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (!recyclerView.canScrollVertically(1) && dy > 0)
-                    scrolledToBottomHandler()
-            }
-        })
+
+        binding.conversationsSearch.doAfterTextChanged { onTextChanged(it.toString()) }
     }
 
     fun updateConversations(data: List<ChatEntity>) {

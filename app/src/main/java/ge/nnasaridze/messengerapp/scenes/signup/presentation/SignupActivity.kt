@@ -1,9 +1,9 @@
 package ge.nnasaridze.messengerapp.scenes.signup.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import ge.nnasaridze.messengerapp.databinding.ActivitySignupBinding
 
 class SignupActivity : SignupView, AppCompatActivity() {

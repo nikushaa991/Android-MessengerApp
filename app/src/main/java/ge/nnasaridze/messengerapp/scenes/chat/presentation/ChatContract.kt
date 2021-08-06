@@ -2,19 +2,20 @@ package ge.nnasaridze.messengerapp.scenes.chat.presentation
 
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.RecyclerMessageEntity
 
-interface ChatView{
+interface ChatView {
     fun updateChat(data: List<RecyclerMessageEntity>)
     fun setTitle(text: String)
     fun emptyText()
+    fun getText(): String
 
-    fun gotoMenu()
+    fun closeChat()
 
     fun showLoading()
     fun hideLoading()
 }
 
-interface ChatPresenter{
-    fun sendPressed(text: String)
+interface ChatPresenter {
+    fun sendPressed()
     fun backPressed()
     fun viewInitialized()
 }

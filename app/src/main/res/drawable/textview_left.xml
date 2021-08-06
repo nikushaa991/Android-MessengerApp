@@ -6,6 +6,6 @@
 
     <corners
         android:bottomRightRadius="@dimen/chat_radius"
-        android:topRightRadius="@dimen/chat_radius"
-        android:topLeftRadius="@dimen/chat_radius" />
+        android:topLeftRadius="@dimen/chat_radius"
+        android:topRightRadius="@dimen/chat_radius" />
 </shape>

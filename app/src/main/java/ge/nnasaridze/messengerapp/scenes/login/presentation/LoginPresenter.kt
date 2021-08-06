@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.login.presentation
 
-import ge.nnasaridze.messengerapp.shared.repositories.authentication.AuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.AuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
-import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
 
 class LoginPresenterImpl(
     private val view: LoginView,

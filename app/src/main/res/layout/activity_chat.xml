@@ -86,8 +86,8 @@
             android:layout_width="@dimen/chat_radius"
             android:layout_height="@dimen/chat_radius"
             android:layout_gravity="center_vertical"
-            app:srcCompat="@drawable/circle"
-            android:contentDescription="@string/ellipses"/>
+            android:contentDescription="@string/ellipses"
+            app:srcCompat="@drawable/circle" />
     </LinearLayout>
 
     <ProgressBar

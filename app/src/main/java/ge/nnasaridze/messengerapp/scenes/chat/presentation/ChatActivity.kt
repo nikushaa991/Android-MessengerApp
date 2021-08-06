@@ -16,17 +16,19 @@ class ChatActivity : ChatView, AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
-        presenter = ChatPresenterImpl(this, intent.getStringExtra("chatID")!!)
+        presenter = ChatPresenterImpl(this,
+            intent.getStringExtra("chatID")!!,
+            intent.getStringExtra("recipientID")!!)
 
         with(binding) {
             adapter = ChatRecyclerAdapter()
             chatRecycler.adapter = adapter
             chatRecycler.adapter = ChatRecyclerAdapter()
             chatRecycler.layoutManager =
-                LinearLayoutManager(this@ChatActivity, LinearLayoutManager.VERTICAL, false)
+                LinearLayoutManager(this@ChatActivity, LinearLayoutManager.VERTICAL, true)
 
             chatSend.setOnClickListener { sendPressed() }
-            //todo back pressed, scroll listener + scroll to bottom?
+            //todo back pressed
         }
 
         presenter.viewInitialized()
@@ -47,7 +49,11 @@ class ChatActivity : ChatView, AppCompatActivity() {
         binding.chatText.setText("")
     }
 
-    override fun gotoMenu() {
+    override fun getText(): String {
+        return binding.chatText.text.toString()
+    }
+
+    override fun closeChat() {
         finish()
     }
 
@@ -60,6 +66,6 @@ class ChatActivity : ChatView, AppCompatActivity() {
     }
 
     private fun sendPressed() {
-        presenter.sendPressed(binding.chatText.text.toString())
+        presenter.sendPressed()
     }
 }

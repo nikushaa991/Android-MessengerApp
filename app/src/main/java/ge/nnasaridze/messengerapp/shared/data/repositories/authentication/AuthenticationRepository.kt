@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.repositories.authentication
+package ge.nnasaridze.messengerapp.shared.data.repositories.authentication
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

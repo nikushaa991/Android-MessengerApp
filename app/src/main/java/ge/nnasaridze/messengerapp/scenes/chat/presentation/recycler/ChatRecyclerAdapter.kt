@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ge.nnasaridze.messengerapp.databinding.ChatRecyclerReceivedItemBinding
 import ge.nnasaridze.messengerapp.databinding.ChatRecyclerSentItemBinding
-import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecyclerViewHolder.Companion.VIEWTYPE_SENT
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecyclerViewHolder.Companion.VIEWTYPE_RECEIVED
+import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecyclerViewHolder.Companion.VIEWTYPE_SENT
 
 
 class ChatRecyclerAdapter : RecyclerView.Adapter<ChatRecyclerViewHolder>() {

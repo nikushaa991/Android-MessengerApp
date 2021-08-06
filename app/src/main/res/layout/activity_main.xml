@@ -29,12 +29,12 @@
         android:background="@drawable/edittext_rounded"
         android:gravity="center"
         android:hint="@string/login_nickname_text"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_icon"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/login_icon" />
 
     <EditText
         android:id="@+id/login_password"
@@ -44,13 +44,13 @@
         android:background="@drawable/edittext_rounded"
         android:gravity="center"
         android:hint="@string/login_password_text"
+        android:importantForAutofill="no"
+        android:inputType="textVisiblePassword"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_name"
-        android:importantForAutofill="no"
-        android:inputType="textVisiblePassword" />
+        app:layout_constraintTop_toBottomOf="@+id/login_name" />
 
 
     <Button

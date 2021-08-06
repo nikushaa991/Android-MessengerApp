@@ -1,10 +1,10 @@
 package ge.nnasaridze.messengerapp.scenes.signup.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.repositories.authentication.AuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.repositories.users.DefaultUsersRepository
-import ge.nnasaridze.messengerapp.shared.repositories.users.UsersRepository
+import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.AuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.users.UsersRepository
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
 
 interface RegisterUsecase {

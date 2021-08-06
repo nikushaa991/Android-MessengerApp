@@ -1,7 +1,7 @@
-package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
+package ge.nnasaridze.messengerapp.shared.data.usecases
 
 import android.net.Uri
-import ge.nnasaridze.messengerapp.shared.repositories.pictures.DefaultPicturesRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 
 interface GetImageUsecase {
     fun execute(id: String, handler: (uri: Uri) -> Unit)

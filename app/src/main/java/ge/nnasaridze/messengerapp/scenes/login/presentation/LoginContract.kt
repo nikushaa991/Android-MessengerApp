@@ -1,10 +1,10 @@
 package ge.nnasaridze.messengerapp.scenes.login.presentation
 
-interface LoginView{
+interface LoginView {
     fun displayError(text: String)
 
-    fun getNickname() : String
-    fun getPassword() : String
+    fun getNickname(): String
+    fun getPassword(): String
 
     fun gotoSignup()
     fun gotoMenu()
@@ -13,7 +13,7 @@ interface LoginView{
     fun hideLoading()
 }
 
-interface LoginPresenter{
+interface LoginPresenter {
     fun signinPressed()
     fun signupPressed()
     fun viewInitialized()
