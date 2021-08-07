@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.data.usecases
+package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
 import android.net.Uri
 import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository

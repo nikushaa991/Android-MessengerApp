@@ -2,6 +2,7 @@ package ge.nnasaridze.messengerapp.scenes.chat.presentation
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nnasaridze.messengerapp.databinding.ActivityChatBinding
@@ -37,6 +38,7 @@ class ChatActivity : ChatView, AppCompatActivity() {
         setContentView(binding.root)
     }
 
+
     override fun updateChat(data: List<RecyclerMessageEntity>) {
         adapter.setData(data)
     }
@@ -59,6 +61,10 @@ class ChatActivity : ChatView, AppCompatActivity() {
 
     override fun showLoading() {
         binding.chatPb.visibility = View.VISIBLE
+    }
+
+    override fun displayError(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
     }
 
     override fun hideLoading() {

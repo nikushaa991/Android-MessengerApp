@@ -4,31 +4,51 @@ import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.RecyclerMess
 import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.chats.DefaultChatsRepository
 
-interface GetMessagesUsecase {
+interface SubscribeMessagesUsecase {
     fun execute(
         chatID: String,
         newMessageHandler: (message: RecyclerMessageEntity) -> Unit,
+        errorHandler: (text: String) -> Unit,
     )
+
+    fun destroy()
 }
 
-class DefaultGetMessagesUsecase : GetMessagesUsecase {
+class DefaultSubscribeMessagesUsecase : SubscribeMessagesUsecase {
 
 
     private val userID = DefaultAuthenticationRepository().getID()
     private val chats = DefaultChatsRepository()
+    private var isDestroyed = false
+    private var subToken = -1
 
     override fun execute(
         chatID: String,
         newMessageHandler: (message: RecyclerMessageEntity) -> Unit,
+        errorHandler: (text: String) -> Unit,
     ) {
-        chats.getAndSubscribeMessages(userID) { message ->
+        chats.getAndSubscribeMessages(userID) { isSuccessful, message, subToken ->
+            if (isDestroyed) {
+                chats.cancelSubscription(subToken)
+                return@getAndSubscribeMessages
+            }
+            this.subToken = subToken
+
+            if (!isSuccessful) {
+                errorHandler("Fetching message failed")
+                return@getAndSubscribeMessages
+            }
+
             val entity = RecyclerMessageEntity(
                 message.text,
                 message.timestamp,
                 chatID == message.senderID)
-
             newMessageHandler(entity)
-
         }
+    }
+
+    override fun destroy() {
+        isDestroyed = true
+        chats.cancelSubscription(subToken)
     }
 }

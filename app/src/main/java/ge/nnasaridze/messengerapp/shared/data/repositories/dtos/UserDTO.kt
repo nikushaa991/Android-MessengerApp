@@ -18,13 +18,4 @@ data class UserDTO(
             profession,
         )
     }
-
-    @Exclude
-    fun toMap(): Map<String, Any?> {
-        return mapOf(
-            "nickname" to nickname,
-            "profession" to profession,
-            "chatIDs" to chatIDs,
-        )
-    }
 }

@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import ge.nnasaridze.messengerapp.databinding.ChatRecyclerReceivedItemBinding
 import ge.nnasaridze.messengerapp.databinding.ChatRecyclerSentItemBinding
-import ge.nnasaridze.messengerapp.shared.utils.formatChatTime
+import ge.nnasaridze.messengerapp.shared.utils.formatMessageTime
 
 sealed class ChatRecyclerViewHolder(binding: ViewBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -23,7 +23,7 @@ sealed class ChatRecyclerViewHolder(binding: ViewBinding) :
         fun bind(data: RecyclerMessageEntity) {
             with(binding) {
                 receivedChatText.text = data.text
-                receivedChatTime.text = formatChatTime(data.timestamp)
+                receivedChatTime.text = formatMessageTime(data.timestamp)
             }
         }
     }
@@ -35,7 +35,7 @@ sealed class ChatRecyclerViewHolder(binding: ViewBinding) :
         fun bind(data: RecyclerMessageEntity) {
             with(binding) {
                 sentChatText.text = data.text
-                sentChatTime.text = formatChatTime(data.timestamp)
+                sentChatTime.text = formatMessageTime(data.timestamp)
             }
         }
     }

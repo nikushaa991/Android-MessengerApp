@@ -6,7 +6,7 @@ import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRep
 interface UpdateUserDataUsecase {
     fun execute(
         user: UserEntity,
-        handler: (isSuccessful: Boolean) -> Unit,
+        onCompleteHandler: () -> Unit, errorHandler: (text: String) -> Unit,
     )
 }
 
@@ -17,9 +17,14 @@ class DefaultUpdateUserDataUsecase : UpdateUserDataUsecase {
 
     override fun execute(
         user: UserEntity,
-        handler: (isSuccessful: Boolean) -> Unit,
+        onCompleteHandler: () -> Unit,
+        errorHandler: (text: String) -> Unit,
     ) {
-        usersRepo.updateUser(user, handler)
+        usersRepo.updateUser(user) { isSuccessful ->
+            if (!isSuccessful)
+                errorHandler("User data update failed")
+            onCompleteHandler()
+        }
     }
 
 }

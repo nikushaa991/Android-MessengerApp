@@ -7,7 +7,7 @@ import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.ConversationsRecyclerItemBinding
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
 import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
-import ge.nnasaridze.messengerapp.shared.utils.formatTime
+import ge.nnasaridze.messengerapp.shared.utils.formatChatTime
 
 
 class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit) :
@@ -58,7 +58,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
             with(binding) {
                 conversationsName.text = data.lastMessage.text
                 conversationsProf.text = data.user.profession
-                conversationsTime.text = formatTime(data.lastMessage.timestamp)
+                conversationsTime.text = formatChatTime(data.lastMessage.timestamp)
                 conversationsIcon.setImageResource(R.drawable.avatar_image_placeholder)
             }
         }

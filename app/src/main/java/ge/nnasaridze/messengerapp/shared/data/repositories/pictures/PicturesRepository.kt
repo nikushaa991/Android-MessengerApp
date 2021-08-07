@@ -10,7 +10,8 @@ interface PicturesRepository {
 
     fun uploadPicture(
         id: String,
-        uri: Uri, handler: (isSuccessful: Boolean) -> Unit,
+        uri: Uri,
+        handler: (isSuccessful: Boolean) -> Unit,
     )
 }
 

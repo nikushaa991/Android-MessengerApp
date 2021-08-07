@@ -6,18 +6,13 @@ import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
 
 @IgnoreExtraProperties
 data class ChatDTO(
-    val userID: String,
+    val userIDs: List<String>,
     val lastMessageID: String? = null,
 ) {
     @Exclude
-    fun toEntity(chatID: String): ChatEntity {
-        return ChatEntity(chatID = chatID)
-    }
-
-    @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
-            "userID" to userID,
+            "userIDs" to userIDs,
             "lastMessageID" to lastMessageID,
         )
     }

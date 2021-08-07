@@ -5,7 +5,7 @@ import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.Defaul
 import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 
 interface UploadImageUsecase {
-    fun execute(uri: Uri, handler: (isSuccessful: Boolean) -> Unit)
+    fun execute(uri: Uri, onCompleteHandler: () -> Unit, errorHandler: (text: String) -> Unit)
 }
 
 class DefaultUploadImageUsecase : UploadImageUsecase {
@@ -14,9 +14,17 @@ class DefaultUploadImageUsecase : UploadImageUsecase {
     private val authRepo = DefaultAuthenticationRepository()
     private val imagesRepo = DefaultPicturesRepository()
 
-    override fun execute(uri: Uri, handler: (isSuccessful: Boolean) -> Unit) {
+    override fun execute(
+        uri: Uri,
+        onCompleteHandler: () -> Unit,
+        errorHandler: (text: String) -> Unit,
+    ) {
         val id = authRepo.getID()
-        imagesRepo.uploadPicture(id, uri, handler)
+        imagesRepo.uploadPicture(id, uri) { isSuccessful ->
+            if (!isSuccessful)
+                errorHandler("Image upload failed")
+            onCompleteHandler()
+        }
     }
 
 }

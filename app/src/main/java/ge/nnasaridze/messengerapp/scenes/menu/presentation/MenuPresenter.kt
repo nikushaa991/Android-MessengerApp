@@ -4,23 +4,15 @@ import android.net.Uri
 import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.*
 import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.AuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.usecases.DefaultGetImageUsecase
-import ge.nnasaridze.messengerapp.shared.data.usecases.DefaultGetUserUsecase
-import ge.nnasaridze.messengerapp.shared.data.usecases.GetImageUsecase
-import ge.nnasaridze.messengerapp.shared.data.usecases.GetUserUsecase
 
 class MenuPresenterImpl(
     private val view: MenuView,
-    private val getUserUsecase: GetUserUsecase = DefaultGetUserUsecase(),
-    private val getChatIDsUsecase: GetChatIDsUsecase = DefaultGetChatIDsUsecase(),
-    private val getLastMessageUsecase: GetLastMessageUsecase = DefaultGetLastMessageUsecase(),
-    private val uploadImageUsecase: UploadImageUsecase = DefaultUploadImageUsecase(),
+    private val subscribeChatsUsecase: SubscribeChatsUsecase = DefaultSubscribeChatsUsecase(),
+    private val subscribeCurrentUserUsecase: SubscribeCurrentUserUsecase = DefaultSubscribeCurrentUserUsecase(),
     private val getImageUsecase: GetImageUsecase = DefaultGetImageUsecase(),
-    private val signoutUsecase: SignoutUsecase = DefaultSignoutUsecase(),
+    private val uploadImageUsecase: UploadImageUsecase = DefaultUploadImageUsecase(),
     private val updateUserDataUsecase: UpdateUserDataUsecase = DefaultUpdateUserDataUsecase(),
-    private val authRepo: AuthenticationRepository = DefaultAuthenticationRepository(),
+    private val signoutUsecase: SignoutUsecase = DefaultSignoutUsecase(),
 ) : MenuPresenter {
 
     private val data = mutableMapOf<String, ChatEntity>()
@@ -31,7 +23,10 @@ class MenuPresenterImpl(
     private lateinit var newImage: Uri
 
     override fun viewInitialized() {
-        loadChats()
+        subscribeChatsUsecase.execute(
+            newChatHandler = ::newChatHandler,
+            errorHandler = ::errorHandler,
+        )
     }
 
     override fun fabPressed() {
@@ -43,9 +38,8 @@ class MenuPresenterImpl(
     }
 
     override fun chatPressed(position: Int) {
-        val chatID = filteredData[position].chatID
-        val recipientID = filteredData[position].user.userID
-        view.gotoChat(chatID, recipientID)
+        val chat = filteredData[position]
+        view.gotoChat(chat.chatID, chat.user.userID)
     }
 
     override fun searchEdited(text: String) {
@@ -56,31 +50,21 @@ class MenuPresenterImpl(
     override fun settingsPressed() {
         if (!::user.isInitialized) {
             view.showLoading()
-            getUserUsecase.execute(authRepo.getID(), ::setupUserData)
+            subscribeCurrentUserUsecase.execute(
+                onCompleteHandler = ::setupUserData,
+                errorHandler = ::errorHandler)
         }
         view.setSettingsFragment()
     }
 
     override fun updatePressed() {
-        if (::newImage.isInitialized) {
-            view.showLoading()
-            uploadImageUsecase.execute(newImage) { isSuccessful ->
-                if (!isSuccessful)
-                    view.displayError("Image upload failed")
-                view.hideLoading()
-            }
-        }
-        if (::user.isInitialized) {
-            val newData = UserEntity(user.userID, view.getName(), view.getProfession())
-            if (user.nickname != newData.nickname || user.profession != newData.profession) {
-                view.showLoading()
-                updateUserDataUsecase.execute(newData) { isSuccessful ->
-                    if (!isSuccessful)
-                        view.displayError("Update Failed")
-                    view.hideLoading()
-                }
-            }
-        }
+        if (::newImage.isInitialized)
+            uploadImage()
+
+        val localName = view.getName()
+        val localProf = view.getProfession()
+        if (::user.isInitialized && (user.nickname != localName || user.profession != localProf))
+            updateUserData(localName, localProf)
     }
 
     override fun signoutPressed() {
@@ -99,16 +83,13 @@ class MenuPresenterImpl(
         view.setImage(uri)
     }
 
-    private fun newChatHandler(chatID: String) {
-        data[chatID] = ChatEntity(chatID)
-        getUserUsecase.execute(chatID) { userEntity ->
-            data[chatID]?.user = userEntity
-            refreshViewData()
-        }
-        getLastMessageUsecase.execute(chatID) { messageEntity ->
-            data[chatID]?.lastMessage = messageEntity
-            refreshViewData()
-        }
+    private fun newChatHandler(chat: ChatEntity) {
+        data[chat.chatID] = chat
+        refreshViewData()
+    }
+
+    private fun errorHandler(text: String) {
+        view.displayError(text)
     }
 
     private fun refreshViewData() {
@@ -118,15 +99,12 @@ class MenuPresenterImpl(
 
     private fun filterData() {
         val newFilteredData = mutableListOf<ChatEntity>()
-        for (chat in data.values) {
-            if (!chat.messageIsInitialized() || !chat.userIsInitialized())
-                continue
+        for (chat in data.values)
             if (chat.user.nickname.contains(searchQuery))
                 newFilteredData.add(chat)
-        }
+
         newFilteredData.sortByDescending { it.lastMessage.timestamp }
         filteredData = newFilteredData
-        refreshViewData()
     }
 
     private fun setupUserData(userEntity: UserEntity) {
@@ -142,7 +120,21 @@ class MenuPresenterImpl(
         user = userEntity
     }
 
-    private fun loadChats() {
-        getChatIDsUsecase.execute(::newChatHandler)
+    private fun uploadImage() {
+        view.showLoading()
+        uploadImageUsecase.execute(
+            uri = newImage,
+            onCompleteHandler = { view.hideLoading() },
+            errorHandler = ::errorHandler)
+
+    }
+
+    private fun updateUserData(name: String, prof: String) {
+        val newUser = UserEntity(user.userID, name, prof)
+        view.showLoading()
+        updateUserDataUsecase.execute(
+            user = newUser,
+            onCompleteHandler = { view.hideLoading() },
+            errorHandler = ::errorHandler)
     }
 }

@@ -5,6 +5,9 @@ import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 interface SearchView {
     fun updateSearch(data: List<UserEntity>)
 
+    fun gotoChat(chatID: String, recipientID: String)
+
+    fun displayError(text: String)
     fun showLoading()
     fun hideLoading()
 }

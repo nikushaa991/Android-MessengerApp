@@ -35,7 +35,7 @@
     <dimen name="search_bar_height">96dp</dimen>
     <dimen name="search_margin_big">24dp</dimen>
     <dimen name="search_margin_small">12dp</dimen>
-    <dimen name="search_back_button_width">32dp</dimen>
+    <dimen name="search_back_button_width">48dp</dimen>
     <dimen name="search_icon_size">48dp</dimen>
 
     <dimen name="chat_padding">16dp</dimen>

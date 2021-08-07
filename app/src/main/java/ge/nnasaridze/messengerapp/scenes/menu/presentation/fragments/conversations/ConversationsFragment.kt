@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nnasaridze.messengerapp.databinding.FragmentConversationsBinding
@@ -12,7 +13,7 @@ import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
 
 class ConversationsFragment(
     private val onItemClickHandler: (position: Int) -> Unit,
-    private val onSearchChangedHandler: (text: String) -> Unit,
+    private val onTextChangedHandler: (text: String) -> Unit,
 ) : Fragment() {
 
 
@@ -33,7 +34,7 @@ class ConversationsFragment(
         binding.conversationsRecycler.adapter = adapter
         binding.conversationsRecycler.layoutManager = LinearLayoutManager(activity)
 
-        binding.conversationsSearch.doAfterTextChanged { onTextChanged(it.toString()) }
+        binding.conversationsText.doAfterTextChanged { onTextChangedHandler(it.toString()) }
     }
 
     fun updateConversations(data: List<ChatEntity>) {

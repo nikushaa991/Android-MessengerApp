@@ -10,6 +10,7 @@ interface ChatView {
 
     fun closeChat()
 
+    fun displayError(text: String)
     fun showLoading()
     fun hideLoading()
 }

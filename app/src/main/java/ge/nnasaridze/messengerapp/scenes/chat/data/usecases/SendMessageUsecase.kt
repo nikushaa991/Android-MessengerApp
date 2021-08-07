@@ -5,7 +5,13 @@ import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.Defaul
 import ge.nnasaridze.messengerapp.shared.data.repositories.chats.DefaultChatsRepository
 
 interface SendMessageUsecase {
-    fun execute(chatID: String, text: String, handler: (isSuccessful: Boolean) -> Unit)
+    fun execute(
+        chatID:
+        String,
+        text: String,
+        successHandler: () -> Unit,
+        errorHandler: (text: String) -> Unit,
+    )
 }
 
 class DefaultSendMessageUsecase : SendMessageUsecase {
@@ -13,8 +19,20 @@ class DefaultSendMessageUsecase : SendMessageUsecase {
     private val repo = DefaultChatsRepository()
     private val userID = DefaultAuthenticationRepository().getID()
 
-    override fun execute(chatID: String, text: String, handler: (isSuccessful: Boolean) -> Unit) {
+    override fun execute(
+        chatID: String,
+        text: String,
+        successHandler: () -> Unit,
+        errorHandler: (text: String) -> Unit,
+    ) {
         val message = MessageEntity(userID, text, System.currentTimeMillis())
-        repo.addMessage(chatID, message, handler)
+
+        repo.addMessage(chatID, message) { isSuccessful ->
+            if (!isSuccessful) {
+                errorHandler("Sending message failed")
+                return@addMessage
+            }
+            successHandler()
+        }
     }
 }

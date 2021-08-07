@@ -1,20 +1,15 @@
 package ge.nnasaridze.messengerapp.scenes.chat.presentation
 
-import ge.nnasaridze.messengerapp.scenes.chat.data.usecases.DefaultGetMessagesUsecase
-import ge.nnasaridze.messengerapp.scenes.chat.data.usecases.DefaultSendMessageUsecase
-import ge.nnasaridze.messengerapp.scenes.chat.data.usecases.GetMessagesUsecase
-import ge.nnasaridze.messengerapp.scenes.chat.data.usecases.SendMessageUsecase
+import ge.nnasaridze.messengerapp.scenes.chat.data.usecases.*
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.RecyclerMessageEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.usecases.DefaultGetUserUsecase
-import ge.nnasaridze.messengerapp.shared.data.usecases.GetUserUsecase
 
 class ChatPresenterImpl(
     private val view: ChatView,
     private val chatID: String,
     private val recipientID: String,
-    private val getMessagesUsecase: GetMessagesUsecase = DefaultGetMessagesUsecase(),
-    private val getUserUsecase: GetUserUsecase = DefaultGetUserUsecase(),
+    private val subscribeMessagesUsecase: SubscribeMessagesUsecase = DefaultSubscribeMessagesUsecase(),
+    private val subscribeUserUsecase: SubscribeUserUsecase = DefaultSubscribeUserUsecase(),
     private val sendMessageUsecase: SendMessageUsecase = DefaultSendMessageUsecase(),
 ) : ChatPresenter {
 
@@ -25,13 +20,20 @@ class ChatPresenterImpl(
     override fun viewInitialized() {
         view.showLoading()
         loadMessages()
-        getUserUsecase.execute(recipientID, ::recipientHandler)
+        subscribeUserUsecase.execute(
+            userID = recipientID,
+            onSuccessHandler = ::recipientHandler,
+            errorHandler = ::errorHandler)
     }
 
     override fun sendPressed() {
         val text = view.getText()
         view.emptyText()
-        sendMessageUsecase.execute(chatID, text, ::sendHandler)
+        sendMessageUsecase.execute(
+            chatID = chatID,
+            text = text,
+            successHandler = {},
+            errorHandler = ::errorHandler)
     }
 
     override fun backPressed() {
@@ -43,7 +45,10 @@ class ChatPresenterImpl(
     }
 
     private fun loadMessages() {
-        getMessagesUsecase.execute(chatID, ::newMessageHandler)
+        subscribeMessagesUsecase.execute(
+            chatID = chatID,
+            newMessageHandler = ::newMessageHandler,
+            errorHandler = ::errorHandler)
     }
 
     private fun newMessageHandler(message: RecyclerMessageEntity) {
@@ -58,8 +63,8 @@ class ChatPresenterImpl(
         view.hideLoading()
     }
 
-    private fun sendHandler(isSuccessful: Boolean) {
-
+    private fun errorHandler(text: String) {
+        view.displayError(text)
     }
 
 }
