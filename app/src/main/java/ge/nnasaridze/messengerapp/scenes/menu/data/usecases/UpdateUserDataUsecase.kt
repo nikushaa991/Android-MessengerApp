@@ -6,7 +6,8 @@ import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRep
 interface UpdateUserDataUsecase {
     fun execute(
         user: UserEntity,
-        onCompleteHandler: () -> Unit, errorHandler: (text: String) -> Unit,
+        onCompleteHandler: () -> Unit,
+        errorHandler: (text: String) -> Unit,
     )
 }
 

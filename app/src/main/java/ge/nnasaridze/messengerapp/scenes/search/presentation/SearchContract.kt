@@ -10,6 +10,8 @@ interface SearchView {
     fun displayError(text: String)
     fun showLoading()
     fun hideLoading()
+
+    fun goBack()
 }
 
 interface SearchPresenter {

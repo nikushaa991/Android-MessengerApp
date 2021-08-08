@@ -11,21 +11,22 @@ class SignupPresenterImpl(
 
 
     override fun signupPressed() {
-        val name = view.getNickname()
-        val pass = view.getPassword()
-        val prof = view.getProfession()
-
         view.showLoading()
-        registerUsecase.execute(name, pass, prof, ::onRegister)
-
+        registerUsecase.execute(
+            name = view.getNickname(),
+            pass = view.getPassword(),
+            prof = view.getProfession(),
+            onSuccessHandler = ::onSuccess,
+            errorHandler = ::errorHandler)
     }
 
-    private fun onRegister(isSuccessful: Boolean, error: String) {
+    private fun onSuccess() {
         view.hideLoading()
-        if (isSuccessful)
-            view.gotoLogin()
-        else {
-            view.displayError(error)
-        }
+        view.gotoLogin()
+    }
+
+    private fun errorHandler(text: String) {
+        view.hideLoading()
+        view.displayError(text)
     }
 }

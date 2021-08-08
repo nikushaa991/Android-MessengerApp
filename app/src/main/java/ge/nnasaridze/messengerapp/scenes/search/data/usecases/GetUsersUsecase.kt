@@ -6,9 +6,14 @@ import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
 
 interface GetUsersUsecase {
     fun execute(
-        amount: Int = LAZY_LOADING_AMOUNT,
-        nameQuery: String = "",
-        newUserHandler: (UserEntity) -> Unit,
+        amount: Int,
+        newUserHandler: (user: UserEntity) -> Unit,
+        errorHandler: (text: String) -> Unit,
+    )
+
+    fun execute(
+        nameQuery: String,
+        newUserHandler: (user: UserEntity, query: String) -> Unit,
         errorHandler: (text: String) -> Unit,
     )
 }
@@ -20,19 +25,33 @@ class DefaultGetUsersUsecase : GetUsersUsecase {
 
     override fun execute(
         amount: Int,
-        nameQuery: String,
-        newUserHandler: (UserEntity) -> Unit,
+        newUserHandler: (user: UserEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
         repo.getUsers(
             from = amount - LAZY_LOADING_AMOUNT,
-            to = amount,
-            nameQuery = nameQuery) { isSuccessful, user ->
+            to = amount) { isSuccessful, user ->
             if (!isSuccessful) {
                 errorHandler("Fetching user failed")
                 return@getUsers
             }
             newUserHandler(user)
+        }
+    }
+
+
+    override fun execute(
+        nameQuery: String,
+        newUserHandler: (user: UserEntity, query: String) -> Unit,
+        errorHandler: (text: String) -> Unit,
+    ) {
+        repo.getUsers(
+            nameQuery = nameQuery) { isSuccessful, user ->
+            if (!isSuccessful) {
+                errorHandler("Fetching searched user failed")
+                return@getUsers
+            }
+            newUserHandler(user, nameQuery)
         }
     }
 }

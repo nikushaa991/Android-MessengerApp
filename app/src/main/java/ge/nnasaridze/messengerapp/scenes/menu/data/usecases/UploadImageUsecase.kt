@@ -5,7 +5,11 @@ import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.Defaul
 import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 
 interface UploadImageUsecase {
-    fun execute(uri: Uri, onCompleteHandler: () -> Unit, errorHandler: (text: String) -> Unit)
+    fun execute(
+        uri: Uri,
+        onCompleteHandler: () -> Unit,
+        errorHandler: (text: String) -> Unit,
+    )
 }
 
 class DefaultUploadImageUsecase : UploadImageUsecase {

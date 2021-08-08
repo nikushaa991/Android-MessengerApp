@@ -14,6 +14,8 @@ import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecycler
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 
 class SearchActivity : SearchView, AppCompatActivity() {
+
+
     private lateinit var binding: ActivitySearchBinding
     private lateinit var presenter: SearchPresenter
     private lateinit var adapter: SearchRecyclerAdapter
@@ -64,6 +66,10 @@ class SearchActivity : SearchView, AppCompatActivity() {
         binding.searchPb.visibility = GONE
     }
 
+    override fun goBack() {
+        finish()
+    }
+
     private fun backPressed() {
         presenter.backPressed()
     }
@@ -75,5 +81,6 @@ class SearchActivity : SearchView, AppCompatActivity() {
     private fun onTextChanged(text: String) {
         presenter.searchEdited(text)
     }
+
 
 }

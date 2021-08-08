@@ -12,7 +12,8 @@ interface RegisterUsecase {
         name: String,
         pass: String,
         prof: String,
-        handler: (isSuccessful: Boolean, error: String) -> Unit,
+        onSuccessHandler: () -> Unit,
+        errorHandler: (error: String) -> Unit,
     )
 }
 
@@ -25,20 +26,27 @@ class DefaultRegisterUsecase : RegisterUsecase {
         name: String,
         pass: String,
         prof: String,
-        handler: (isSuccessful: Boolean, error: String) -> Unit,
+        onSuccessHandler: () -> Unit,
+        errorHandler: (error: String) -> Unit,
     ) {
         if (!authRepo.isValidCredential(name) || !authRepo.isValidCredential(pass)) {
-            handler(false, CREDENTIALS_ERROR)
+            errorHandler(CREDENTIALS_ERROR)
             return
         }
-        authRepo.register(name, pass) { isSuccessful ->
-            if (!isSuccessful) {
-                handler(false, "Registration error")
-            } else {
-                val entity = UserEntity(authRepo.getID(), name, prof)
-                usersRepo.createUser(entity) {
-                    handler(it, "")
+
+        authRepo.register(name, pass) { authIsSuccessful ->
+            if (!authIsSuccessful) {
+                errorHandler("Authentication registration error")
+                return@register
+            }
+
+            val entity = UserEntity(authRepo.getID(), name, prof)
+            usersRepo.createUser(entity) { userIsSuccessful ->
+                if (!userIsSuccessful) {
+                    errorHandler("User registration error")
+                    return@createUser
                 }
+                onSuccessHandler()
             }
         }
     }
