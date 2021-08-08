@@ -11,13 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.ActivityMenuBinding
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.ChatActivity
 import ge.nnasaridze.messengerapp.scenes.login.presentation.MainActivity
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.ConversationsFragment
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings.SettingsFragment
 import ge.nnasaridze.messengerapp.scenes.search.presentation.SearchActivity
-import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
 
 class MenuActivity : MenuView, AppCompatActivity() {
 
@@ -56,7 +57,23 @@ class MenuActivity : MenuView, AppCompatActivity() {
                 this@MenuActivity,
                 arrayListOf(conversations, settings)
             )
-            //todo viewpager behavior?
+
+            menuNav.setOnItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.action_home -> pager.setCurrentItem(FRAGMENT_CONVERSATIONS, true)
+                    else -> pager.setCurrentItem(FRAGMENT_SETTINGS, true)
+                }
+                true
+            }
+            pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    menuNav.selectedItemId = when (position) {
+                        FRAGMENT_CONVERSATIONS -> R.id.action_home
+                        else -> R.id.action_settings
+                    }
+                }
+            })
         }
 
         presenter.viewInitialized()
@@ -77,7 +94,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
         pager.currentItem = FRAGMENT_CONVERSATIONS
     }
 
-    override fun updateConversations(data: MutableList<ChatEntity>) {
+    override fun updateConversations(data: List<RecyclerChatEntity>) {
         conversations.updateConversations(data)
 
     }
@@ -144,7 +161,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
         presenter.chatPressed(position)
     }
 
-    private fun onTextChanged(text: String){
+    private fun onTextChanged(text: String) {
         presenter.searchEdited(text)
     }
 

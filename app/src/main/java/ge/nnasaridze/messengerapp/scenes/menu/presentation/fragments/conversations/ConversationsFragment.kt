@@ -8,6 +8,8 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import ge.nnasaridze.messengerapp.databinding.FragmentConversationsBinding
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.ConversationsRecyclerAdapter
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
 
 
@@ -37,7 +39,7 @@ class ConversationsFragment(
         binding.conversationsText.doAfterTextChanged { onTextChangedHandler(it.toString()) }
     }
 
-    fun updateConversations(data: List<ChatEntity>) {
+    fun updateConversations(data: List<RecyclerChatEntity>) {
         adapter.setData(data)
     }
 }

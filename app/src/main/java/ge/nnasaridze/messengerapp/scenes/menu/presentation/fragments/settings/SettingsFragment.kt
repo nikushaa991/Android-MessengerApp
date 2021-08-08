@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.FragmentSettingsBinding
 
 
@@ -41,7 +43,11 @@ class SettingsFragment(
     }
 
     fun setImage(image: Uri) {
-        binding.settingsIcon.setImageURI(image)
+        Glide.with(this)
+            .load(image)
+            .placeholder(R.drawable.avatar_image_placeholder)
+            .error(R.drawable.avatar_image_placeholder)
+            .into(binding.settingsIcon)
     }
 
     fun getName(): String {

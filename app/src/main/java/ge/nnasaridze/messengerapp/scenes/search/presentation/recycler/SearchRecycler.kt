@@ -1,17 +1,18 @@
-package ge.nnasaridze.messengerapp.scenes.search.presentation
+package ge.nnasaridze.messengerapp.scenes.search.presentation.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.SearchRecyclerItemBinding
-import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 
 
 class SearchRecyclerAdapter(private val handler: (position: Int) -> Unit) :
     RecyclerView.Adapter<SearchRecyclerAdapter.SearchRecyclerViewHolder>() {
 
 
-    private var data: List<UserEntity> = arrayListOf()
+    private var data: List<RecyclerUserEntity> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -41,7 +42,7 @@ class SearchRecyclerAdapter(private val handler: (position: Int) -> Unit) :
         return data.size
     }
 
-    fun setData(newData: List<UserEntity>) {
+    fun setData(newData: List<RecyclerUserEntity>) {
         data = newData
     }
 
@@ -51,12 +52,16 @@ class SearchRecyclerAdapter(private val handler: (position: Int) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(data: UserEntity) {
+        fun bind(data: RecyclerUserEntity) {
             with(binding) {
                 searchName.text = data.nickname
                 searchProf.text = data.profession
 
-                //TODO get image
+                Glide.with(itemView.context)
+                    .load(data.image)
+                    .placeholder(R.drawable.avatar_image_placeholder)
+                    .error(R.drawable.avatar_image_placeholder)
+                    .into(searchIcon)
             }
         }
     }

@@ -1,10 +1,11 @@
 package ge.nnasaridze.messengerapp.scenes.signup.data.usecases
 
+import android.net.Uri
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.AuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.users.UsersRepository
+import ge.nnasaridze.messengerapp.shared.utils.BATMAN_PATH
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
 
 interface RegisterUsecase {
@@ -19,8 +20,9 @@ interface RegisterUsecase {
 
 class DefaultRegisterUsecase : RegisterUsecase {
 
-    private val authRepo: AuthenticationRepository = DefaultAuthenticationRepository()
-    private val usersRepo: UsersRepository = DefaultUsersRepository()
+    private val authRepo = DefaultAuthenticationRepository()
+    private val usersRepo = DefaultUsersRepository()
+    private val picturesRepo = DefaultPicturesRepository()
 
     override fun execute(
         name: String,
@@ -46,7 +48,15 @@ class DefaultRegisterUsecase : RegisterUsecase {
                     errorHandler("User registration error")
                     return@createUser
                 }
-                onSuccessHandler()
+
+                picturesRepo.uploadPicture(
+                    entity.userID,
+                    Uri.parse(BATMAN_PATH)) { imageIsSuccessful ->
+                    if (!imageIsSuccessful) {
+                        errorHandler("Image upload failed")
+                    }
+                    onSuccessHandler()
+                }
             }
         }
     }

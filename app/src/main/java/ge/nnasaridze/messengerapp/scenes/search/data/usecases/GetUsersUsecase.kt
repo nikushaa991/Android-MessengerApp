@@ -1,19 +1,21 @@
 package ge.nnasaridze.messengerapp.scenes.search.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import android.net.Uri
+import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
+import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
 import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
 
 interface GetUsersUsecase {
     fun execute(
         amount: Int,
-        newUserHandler: (user: UserEntity) -> Unit,
+        newUserHandler: (user: RecyclerUserEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     )
 
     fun execute(
         nameQuery: String,
-        newUserHandler: (user: UserEntity, query: String) -> Unit,
+        newUserHandler: (user: RecyclerUserEntity, query: String) -> Unit,
         errorHandler: (text: String) -> Unit,
     )
 }
@@ -21,37 +23,53 @@ interface GetUsersUsecase {
 class DefaultGetUsersUsecase : GetUsersUsecase {
 
 
-    private val repo = DefaultUsersRepository()
+    private val usersRepo = DefaultUsersRepository()
+    private val picturesRepo = DefaultPicturesRepository()
 
     override fun execute(
         amount: Int,
-        newUserHandler: (user: UserEntity) -> Unit,
+        newUserHandler: (user: RecyclerUserEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
-        repo.getUsers(
+        usersRepo.getUsers(
             from = amount - LAZY_LOADING_AMOUNT,
             to = amount) { isSuccessful, user ->
             if (!isSuccessful) {
                 errorHandler("Fetching user failed")
                 return@getUsers
             }
-            newUserHandler(user)
+            val pictureUri = picturesRepo.getPictureURL(user.userID)
+            if (pictureUri == null) {
+                errorHandler("Fetching image failed")
+                return@getUsers
+            }
+
+            val recyclerEntity =
+                RecyclerUserEntity(user.userID, user.nickname, user.profession, pictureUri)
+            newUserHandler(recyclerEntity)
         }
     }
 
 
     override fun execute(
         nameQuery: String,
-        newUserHandler: (user: UserEntity, query: String) -> Unit,
+        newUserHandler: (user: RecyclerUserEntity, query: String) -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
-        repo.getUsers(
+        usersRepo.getUsers(
             nameQuery = nameQuery) { isSuccessful, user ->
             if (!isSuccessful) {
                 errorHandler("Fetching searched user failed")
                 return@getUsers
             }
-            newUserHandler(user, nameQuery)
+            val pictureUri = picturesRepo.getPictureURL(user.userID) ?: Uri.EMPTY
+            if (pictureUri == Uri.EMPTY) {
+                errorHandler("Fetching image failed")
+            }
+
+            val recyclerEntity =
+                RecyclerUserEntity(user.userID, user.nickname, user.profession, pictureUri)
+            newUserHandler(recyclerEntity, nameQuery)
         }
     }
 }

@@ -4,6 +4,7 @@ import ge.nnasaridze.messengerapp.scenes.search.data.usecases.CreateChatUsecase
 import ge.nnasaridze.messengerapp.scenes.search.data.usecases.DefaultCreateChatUsecase
 import ge.nnasaridze.messengerapp.scenes.search.data.usecases.DefaultGetUsersUsecase
 import ge.nnasaridze.messengerapp.scenes.search.data.usecases.GetUsersUsecase
+import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
 
@@ -14,8 +15,8 @@ class SearchPresenterImpl(
 ) : SearchPresenter {
 
 
-    private val data = mutableListOf<UserEntity>()
-    private var searchedData = mutableListOf<UserEntity>()
+    private val data = mutableListOf<RecyclerUserEntity>()
+    private var searchedData = mutableListOf<RecyclerUserEntity>()
     private var usersToLoad = 0
 
     private var searchQuery = ""
@@ -46,7 +47,7 @@ class SearchPresenterImpl(
     }
 
     override fun backPressed() {
-        view.finish()
+        view.goBack()
     }
 
     private fun loadUsers() {
@@ -60,15 +61,18 @@ class SearchPresenterImpl(
             newUserHandler = ::newUserHandler,
             errorHandler = ::errorHandler)
     }
+    override fun onScrolledToBottom() {
+        loadUsers()
+    }
 
-    private fun newUserHandler(user: UserEntity) {
+    private fun newUserHandler(user: RecyclerUserEntity) {
         data.add(user)
 
         if (!isSearching)
             view.updateSearch(data)
     }
 
-    private fun newSearchedUserHandler(user: UserEntity, query: String) {
+    private fun newSearchedUserHandler(user: RecyclerUserEntity, query: String) {
         if (query != searchQuery)
             return
 
@@ -76,10 +80,6 @@ class SearchPresenterImpl(
 
         if (isSearching)
             view.updateSearch(searchedData)
-    }
-
-    private fun onScrolledToBottom() {
-        loadUsers()
     }
 
     private fun errorHandler(text: String) {

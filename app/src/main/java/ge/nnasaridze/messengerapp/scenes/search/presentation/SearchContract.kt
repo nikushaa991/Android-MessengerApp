@@ -1,9 +1,9 @@
 package ge.nnasaridze.messengerapp.scenes.search.presentation
 
-import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
 
 interface SearchView {
-    fun updateSearch(data: List<UserEntity>)
+    fun updateSearch(data: List<RecyclerUserEntity>)
 
     fun gotoChat(chatID: String, recipientID: String)
 
@@ -19,4 +19,5 @@ interface SearchPresenter {
     fun searchEdited(text: String)
     fun backPressed()
     fun viewInitialized()
+    fun onScrolledToBottom()
 }

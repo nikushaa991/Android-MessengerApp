@@ -8,10 +8,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ge.nnasaridze.messengerapp.databinding.ActivitySearchBinding
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.ChatActivity
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecyclerAdapter
-import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
+import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.SearchRecyclerAdapter
+
 
 class SearchActivity : SearchView, AppCompatActivity() {
 
@@ -31,6 +34,13 @@ class SearchActivity : SearchView, AppCompatActivity() {
             searchRecycler.adapter = ChatRecyclerAdapter()
             searchRecycler.layoutManager = LinearLayoutManager(this@SearchActivity)
 
+            searchRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (!recyclerView.canScrollVertically(1) && dy > 0)
+                        presenter.onScrolledToBottom()
+                }
+            })
+
             searchBackButton.setOnClickListener { backPressed() }
 
             searchText.doAfterTextChanged { onTextChanged(it.toString()) }
@@ -42,7 +52,7 @@ class SearchActivity : SearchView, AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    override fun updateSearch(data: List<UserEntity>) {
+    override fun updateSearch(data: List<RecyclerUserEntity>) {
         adapter.setData(data)
     }
 

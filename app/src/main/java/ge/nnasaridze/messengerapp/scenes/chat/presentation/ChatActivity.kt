@@ -29,7 +29,7 @@ class ChatActivity : ChatView, AppCompatActivity() {
                 LinearLayoutManager(this@ChatActivity, LinearLayoutManager.VERTICAL, true)
 
             chatSend.setOnClickListener { sendPressed() }
-            //todo back pressed
+            chatToolbar.setNavigationOnClickListener { presenter.backPressed() }
         }
 
         presenter.viewInitialized()

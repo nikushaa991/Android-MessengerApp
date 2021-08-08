@@ -1,12 +1,12 @@
-package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations
+package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.ConversationsRecyclerItemBinding
-import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
-import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
 import ge.nnasaridze.messengerapp.shared.utils.formatChatTime
 
 
@@ -14,7 +14,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
     RecyclerView.Adapter<ConversationsRecyclerViewHolder>() {
 
 
-    private var data: List<ChatEntity> = arrayListOf()
+    private var data: List<RecyclerChatEntity> = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -44,7 +44,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
         return data.size
     }
 
-    fun setData(newData: List<ChatEntity>) {
+    fun setData(newData: List<RecyclerChatEntity>) {
         data = newData
     }
 
@@ -54,12 +54,18 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(data: ChatEntity) {
+        fun bind(data: RecyclerChatEntity) {
             with(binding) {
                 conversationsName.text = data.lastMessage.text
                 conversationsProf.text = data.user.profession
                 conversationsTime.text = formatChatTime(data.lastMessage.timestamp)
                 conversationsIcon.setImageResource(R.drawable.avatar_image_placeholder)
+
+                Glide.with(itemView.context)
+                    .load(data.image)
+                    .placeholder(R.drawable.avatar_image_placeholder)
+                    .error(R.drawable.avatar_image_placeholder)
+                    .into(conversationsIcon)
             }
         }
     }

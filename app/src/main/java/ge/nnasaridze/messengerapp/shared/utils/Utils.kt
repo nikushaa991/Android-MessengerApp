@@ -3,6 +3,9 @@ package ge.nnasaridze.messengerapp.shared.utils
 import java.text.SimpleDateFormat
 import java.util.*
 
+const val BATMAN_PATH =
+    "android.resource://ge.nnasaridze.messengerapp/drawable/avatar_image_placeholder.png"
+
 const val EMAIL_SUFFIX = "@fake.fake"
 const val UNREGISTERED = "UNREGISTERED"
 

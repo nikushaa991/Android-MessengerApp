@@ -1,15 +1,17 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
+import android.net.Uri
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.chats.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
 
 interface SubscribeChatsUsecase {
     fun execute(
-        newChatHandler: (chat: ChatEntity) -> Unit,
+        newChatHandler: (chat: RecyclerChatEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     )
 
@@ -21,17 +23,18 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     private val currentId = DefaultAuthenticationRepository().getID()
     private val usersRepo = DefaultUsersRepository()
     private val chatsRepo = DefaultChatsRepository()
+    private val imagesRepo = DefaultPicturesRepository()
 
     private val messageHandlerVersions = mutableMapOf<String, Int>()
     private val usersSubTokens = mutableSetOf<Int>()
     private val chatsSubTokens = mutableSetOf<Int>()
     private var isDestroyed = false
 
-    private lateinit var newChatHandler: (chat: ChatEntity) -> Unit
+    private lateinit var newChatHandler: (chat: RecyclerChatEntity) -> Unit
     private lateinit var errorHandler: (text: String) -> Unit
 
     override fun execute(
-        newChatHandler: (chat: ChatEntity) -> Unit,
+        newChatHandler: (chat: RecyclerChatEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
         this.newChatHandler = newChatHandler
@@ -114,7 +117,11 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     }
 
     private fun constructChat(chatID: String, user: UserEntity, message: MessageEntity) {
-        newChatHandler(ChatEntity(chatID, user, message))
+        val imageUri = imagesRepo.getPictureURL(user.userID) ?: Uri.EMPTY
+        if (imageUri == Uri.EMPTY) {
+            errorHandler("Fetching image failed")
+        }
+        newChatHandler(RecyclerChatEntity(chatID, user, message, imageUri))
     }
 
 }

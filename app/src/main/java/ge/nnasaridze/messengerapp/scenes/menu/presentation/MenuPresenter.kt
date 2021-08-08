@@ -2,7 +2,7 @@ package ge.nnasaridze.messengerapp.scenes.menu.presentation
 
 import android.net.Uri
 import ge.nnasaridze.messengerapp.scenes.menu.data.usecases.*
-import ge.nnasaridze.messengerapp.shared.data.entities.ChatEntity
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 
 class MenuPresenterImpl(
@@ -15,9 +15,9 @@ class MenuPresenterImpl(
     private val signoutUsecase: SignoutUsecase = DefaultSignoutUsecase(),
 ) : MenuPresenter {
 
-    private val data = mutableMapOf<String, ChatEntity>()
+    private val data = mutableMapOf<String, RecyclerChatEntity>()
     private var searchQuery = ""
-    private var filteredData = mutableListOf<ChatEntity>()
+    private var filteredData = mutableListOf<RecyclerChatEntity>()
 
     private lateinit var user: UserEntity
     private lateinit var newImage: Uri
@@ -83,7 +83,7 @@ class MenuPresenterImpl(
         view.setImage(uri)
     }
 
-    private fun newChatHandler(chat: ChatEntity) {
+    private fun newChatHandler(chat: RecyclerChatEntity) {
         data[chat.chatID] = chat
         refreshViewData()
     }
@@ -98,7 +98,7 @@ class MenuPresenterImpl(
     }
 
     private fun filterData() {
-        val newFilteredData = mutableListOf<ChatEntity>()
+        val newFilteredData = mutableListOf<RecyclerChatEntity>()
         for (chat in data.values)
             if (chat.user.nickname.contains(searchQuery))
                 newFilteredData.add(chat)
