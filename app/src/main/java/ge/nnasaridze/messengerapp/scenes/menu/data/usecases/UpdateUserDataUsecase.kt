@@ -1,6 +1,7 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
+import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
 
 interface UpdateUserDataUsecase {
@@ -15,16 +16,23 @@ class DefaultUpdateUserDataUsecase : UpdateUserDataUsecase {
 
 
     private val usersRepo = DefaultUsersRepository()
+    private val authRepo = DefaultAuthenticationRepository()
 
     override fun execute(
         user: UserEntity,
         onCompleteHandler: () -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
-        usersRepo.updateUser(user) { isSuccessful ->
-            if (!isSuccessful)
-                errorHandler("User data update failed")
-            onCompleteHandler()
+        authRepo.updateName(user.nickname) { isSuccessful ->
+            if (!isSuccessful) {
+                errorHandler("Auth data update failed")
+                return@updateName
+            }
+            usersRepo.updateUser(user) { userIsSuccessful ->
+                if (!userIsSuccessful)
+                    errorHandler("User data update failed")
+                onCompleteHandler()
+            }
         }
     }
 

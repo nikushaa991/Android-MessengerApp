@@ -16,8 +16,7 @@ interface SubscribeMessagesUsecase {
 
 class DefaultSubscribeMessagesUsecase : SubscribeMessagesUsecase {
 
-
-    private val userID = DefaultAuthenticationRepository().getID()
+    private val currentID = DefaultAuthenticationRepository().getID()
     private val chats = DefaultChatsRepository()
     private var isDestroyed = false
     private var subToken = -1
@@ -27,7 +26,7 @@ class DefaultSubscribeMessagesUsecase : SubscribeMessagesUsecase {
         newMessageHandler: (message: RecyclerMessageEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
-        chats.getAndSubscribeMessages(userID) { isSuccessful, message, subToken ->
+        chats.getAndSubscribeMessages(chatID) { isSuccessful, message, subToken ->
             if (isDestroyed) {
                 chats.cancelSubscription(subToken)
                 return@getAndSubscribeMessages
@@ -42,7 +41,7 @@ class DefaultSubscribeMessagesUsecase : SubscribeMessagesUsecase {
             val entity = RecyclerMessageEntity(
                 message.text,
                 message.timestamp,
-                chatID == message.senderID)
+                currentID == message.senderID)
             newMessageHandler(entity)
         }
     }

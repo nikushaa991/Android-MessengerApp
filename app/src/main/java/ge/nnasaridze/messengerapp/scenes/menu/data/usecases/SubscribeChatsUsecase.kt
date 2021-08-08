@@ -1,6 +1,5 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
-import android.net.Uri
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
@@ -105,7 +104,7 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     }
 
     private fun getLastMessage(chatID: String, messageID: String, user: UserEntity) {
-        chatsRepo.getMessage(messageID) { isSuccessful, message ->
+        chatsRepo.getMessage(chatID, messageID) { isSuccessful, message ->
             if (isDestroyed)
                 return@getMessage
             if (!isSuccessful) {
@@ -117,11 +116,10 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     }
 
     private fun constructChat(chatID: String, user: UserEntity, message: MessageEntity) {
-        val imageUri = imagesRepo.getPictureURL(user.userID) ?: Uri.EMPTY
-        if (imageUri == Uri.EMPTY) {
-            errorHandler("Fetching image failed")
+        imagesRepo.getPictureURL(user.userID) { isSuccessful, uri ->
+            if (!isSuccessful)
+                errorHandler("Image not found")
+            newChatHandler(RecyclerChatEntity(chatID, user, message, uri))
         }
-        newChatHandler(RecyclerChatEntity(chatID, user, message, imageUri))
     }
-
 }

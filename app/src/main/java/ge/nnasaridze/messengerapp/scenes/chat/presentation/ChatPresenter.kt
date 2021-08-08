@@ -28,6 +28,8 @@ class ChatPresenterImpl(
 
     override fun sendPressed() {
         val text = view.getText()
+        if (text == "")
+            return
         view.emptyText()
         sendMessageUsecase.execute(
             chatID = chatID,

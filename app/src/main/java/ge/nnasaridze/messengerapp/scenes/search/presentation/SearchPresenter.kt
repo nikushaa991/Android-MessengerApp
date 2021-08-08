@@ -5,7 +5,6 @@ import ge.nnasaridze.messengerapp.scenes.search.data.usecases.DefaultCreateChatU
 import ge.nnasaridze.messengerapp.scenes.search.data.usecases.DefaultGetUsersUsecase
 import ge.nnasaridze.messengerapp.scenes.search.data.usecases.GetUsersUsecase
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
-import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
 
 class SearchPresenterImpl(
@@ -28,7 +27,7 @@ class SearchPresenterImpl(
     }
 
     override fun userClicked(position: Int) {
-        val recipientID = searchedData[position].userID
+        val recipientID = (if (isSearching) searchedData else data)[position].userID
         createChatUsecase.execute(
             recipientID = recipientID,
             onSuccessHandler = { chatID -> view.gotoChat(chatID, recipientID) },
@@ -39,7 +38,7 @@ class SearchPresenterImpl(
         isSearching = text.length >= 3
         searchQuery = text
         if (text.length < 3) return
-
+        searchedData.clear()
         getUsersUsecase.execute(
             nameQuery = searchQuery,
             newUserHandler = ::newSearchedUserHandler,
@@ -61,11 +60,13 @@ class SearchPresenterImpl(
             newUserHandler = ::newUserHandler,
             errorHandler = ::errorHandler)
     }
+
     override fun onScrolledToBottom() {
         loadUsers()
     }
 
     private fun newUserHandler(user: RecyclerUserEntity) {
+        view.hideLoading()
         data.add(user)
 
         if (!isSearching)
@@ -83,6 +84,7 @@ class SearchPresenterImpl(
     }
 
     private fun errorHandler(text: String) {
+        view.hideLoading()
         view.displayError(text)
     }
 }

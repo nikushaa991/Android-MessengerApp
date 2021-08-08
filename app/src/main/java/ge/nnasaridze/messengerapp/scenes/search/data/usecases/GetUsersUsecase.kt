@@ -1,6 +1,5 @@
 package ge.nnasaridze.messengerapp.scenes.search.data.usecases
 
-import android.net.Uri
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
 import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
@@ -38,15 +37,13 @@ class DefaultGetUsersUsecase : GetUsersUsecase {
                 errorHandler("Fetching user failed")
                 return@getUsers
             }
-            val pictureUri = picturesRepo.getPictureURL(user.userID)
-            if (pictureUri == null) {
-                errorHandler("Fetching image failed")
-                return@getUsers
+            picturesRepo.getPictureURL(user.userID) { imageIsSuccessful, uri ->
+                if (!imageIsSuccessful)
+                    errorHandler("Image not found")
+                val recyclerEntity =
+                    RecyclerUserEntity(user.userID, user.nickname, user.profession, uri)
+                newUserHandler(recyclerEntity)
             }
-
-            val recyclerEntity =
-                RecyclerUserEntity(user.userID, user.nickname, user.profession, pictureUri)
-            newUserHandler(recyclerEntity)
         }
     }
 
@@ -62,14 +59,14 @@ class DefaultGetUsersUsecase : GetUsersUsecase {
                 errorHandler("Fetching searched user failed")
                 return@getUsers
             }
-            val pictureUri = picturesRepo.getPictureURL(user.userID) ?: Uri.EMPTY
-            if (pictureUri == Uri.EMPTY) {
-                errorHandler("Fetching image failed")
+            picturesRepo.getPictureURL(user.userID) { imageIsSuccessful, uri ->
+                if (!imageIsSuccessful)
+                    errorHandler("Image not found")
+                val recyclerEntity =
+                    RecyclerUserEntity(user.userID, user.nickname, user.profession, uri)
+                newUserHandler(recyclerEntity, nameQuery)
             }
-
-            val recyclerEntity =
-                RecyclerUserEntity(user.userID, user.nickname, user.profession, pictureUri)
-            newUserHandler(recyclerEntity, nameQuery)
         }
     }
+
 }

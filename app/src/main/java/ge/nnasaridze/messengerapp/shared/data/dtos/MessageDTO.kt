@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.data.repositories.dtos
+package ge.nnasaridze.messengerapp.shared.data.dtos
 
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties
@@ -6,16 +6,16 @@ import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 
 @IgnoreExtraProperties
 data class MessageDTO(
-    val senderID: String,
-    val text: String,
-    val timestamp: Long,
+    val senderID: String? = null,
+    val text: String? = null,
+    val timestamp: Long? = null,
 ) {
     @Exclude
     fun toEntity(): MessageEntity {
         return MessageEntity(
-            senderID,
-            text,
-            timestamp,
+            senderID ?: "",
+            text ?: "",
+            timestamp ?: 0,
         )
     }
 

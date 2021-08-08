@@ -46,6 +46,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
 
     fun setData(newData: List<RecyclerChatEntity>) {
         data = newData
+        notifyDataSetChanged()
     }
 
     class ConversationsRecyclerViewHolder(
@@ -56,8 +57,8 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
 
         fun bind(data: RecyclerChatEntity) {
             with(binding) {
-                conversationsName.text = data.lastMessage.text
-                conversationsProf.text = data.user.profession
+                conversationsName.text = data.user.nickname
+                conversationsProf.text = data.lastMessage.text
                 conversationsTime.text = formatChatTime(data.lastMessage.timestamp)
                 conversationsIcon.setImageResource(R.drawable.avatar_image_placeholder)
 

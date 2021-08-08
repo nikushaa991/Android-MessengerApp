@@ -5,8 +5,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import ge.nnasaridze.messengerapp.shared.data.dtos.UserDTO
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.dtos.UserDTO
+import ge.nnasaridze.messengerapp.shared.utils.DATABASE_URL
 
 interface UsersRepository {
     fun createUser(
@@ -37,12 +38,12 @@ interface UsersRepository {
 class DefaultUsersRepository : UsersRepository {
 
 
-    private val database = Firebase.database.reference
+    private val database = Firebase.database(DATABASE_URL).reference
     private val subscriptions = mutableMapOf<Int, () -> Unit>()
     private var subscriptionNextFreeToken = 0
 
     override fun createUser(user: UserEntity, handler: (isSuccessful: Boolean) -> Unit) {
-        val userDTO = UserDTO(user.nickname, user.nickname, listOf())
+        val userDTO = UserDTO(user.nickname, user.nickname, hashMapOf())
         database.child("users").child(user.userID).setValue(userDTO)
             .addOnCompleteListener { handler(it.isSuccessful) }
     }
@@ -96,6 +97,7 @@ class DefaultUsersRepository : UsersRepository {
                 for (ds in snapshot.children) {
                     val userID = ds.key ?: continue
                     val userDTO = ds.getValue(UserDTO::class.java) ?: continue
+                    if (userDTO.nickname == null) continue
                     if (nameQuery in userDTO.nickname && count < to) {
                         count++
                         handler(true, userDTO.toEntity(userID))

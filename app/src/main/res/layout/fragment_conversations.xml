@@ -41,6 +41,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/search_rounded"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:paddingStart="@dimen/conversations_margin_small"
                     android:paddingEnd="@dimen/conversations_margin_small">
 

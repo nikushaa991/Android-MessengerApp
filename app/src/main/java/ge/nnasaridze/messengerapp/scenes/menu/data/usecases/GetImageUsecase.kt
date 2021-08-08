@@ -4,7 +4,11 @@ import android.net.Uri
 import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
 
 interface GetImageUsecase {
-    fun execute(id: String, handler: (uri: Uri) -> Unit)
+    fun execute(
+        id: String,
+        onSuccessHandler: (uri: Uri) -> Unit,
+        errorHandler: (text: String) -> Unit,
+    )
 }
 
 
@@ -13,10 +17,15 @@ class DefaultGetImageUsecase : GetImageUsecase {
 
     private val repo = DefaultPicturesRepository()
 
-    override fun execute(id: String, handler: (uri: Uri) -> Unit) {
-        val uri = repo.getPictureURL(id)
-        if (uri != null)
-            handler(uri)
+    override fun execute(
+        id: String,
+        onSuccessHandler: (uri: Uri) -> Unit,
+        errorHandler: (text: String) -> Unit,
+    ) {
+        repo.getPictureURL(id) { isSuccessful, uri ->
+            if (!isSuccessful)
+                errorHandler("Image not found")
+            onSuccessHandler(uri)
+        }
     }
-
 }

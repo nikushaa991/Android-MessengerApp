@@ -108,14 +108,16 @@ class MenuPresenterImpl(
     }
 
     private fun setupUserData(userEntity: UserEntity) {
-        view.setName(user.nickname)
-        view.setProfession(user.profession)
+        view.setName(userEntity.nickname)
+        view.setProfession(userEntity.profession)
 
         if (!::user.isInitialized) {
             view.hideLoading()
-            getImageUsecase.execute(userEntity.userID) { uri ->
-                view.setImage(uri)
-            }
+            getImageUsecase.execute(
+                id = userEntity.userID,
+                onSuccessHandler = { view.setImage(it) },
+                errorHandler = ::errorHandler,
+            )
         }
         user = userEntity
     }

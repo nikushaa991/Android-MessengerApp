@@ -4,7 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -40,6 +42,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
     private lateinit var pager: ViewPager2
     private lateinit var conversations: ConversationsFragment
     private lateinit var settings: SettingsFragment
+    private lateinit var imagePicker: ActivityResultLauncher<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,21 +63,31 @@ class MenuActivity : MenuView, AppCompatActivity() {
 
             menuNav.setOnItemSelectedListener { item ->
                 when (item.itemId) {
-                    R.id.action_home -> pager.setCurrentItem(FRAGMENT_CONVERSATIONS, true)
-                    else -> pager.setCurrentItem(FRAGMENT_SETTINGS, true)
+                    R.id.action_home -> presenter.homePressed()
+                    else -> presenter.settingsPressed()
                 }
                 true
             }
             pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    menuNav.selectedItemId = when (position) {
-                        FRAGMENT_CONVERSATIONS -> R.id.action_home
-                        else -> R.id.action_settings
+                    when (position) {
+                        FRAGMENT_CONVERSATIONS -> {
+                            presenter.homePressed()
+                            menuNav.selectedItemId = R.id.action_home
+                        }
+                        else -> {
+                            presenter.settingsPressed()
+                            menuNav.selectedItemId = R.id.action_settings
+                        }
                     }
                 }
             })
         }
+        imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            presenter.imagePicked(uri)
+        }
+        this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         presenter.viewInitialized()
 
@@ -91,7 +104,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
     }
 
     override fun setConversationsFragment() {
-        pager.currentItem = FRAGMENT_CONVERSATIONS
+        pager.setCurrentItem(FRAGMENT_CONVERSATIONS, true)
     }
 
     override fun updateConversations(data: List<RecyclerChatEntity>) {
@@ -108,7 +121,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
     }
 
     override fun setSettingsFragment() {
-        pager.currentItem = FRAGMENT_SETTINGS
+        pager.setCurrentItem(FRAGMENT_SETTINGS, true)
     }
 
     override fun setName(name: String) {
@@ -132,9 +145,7 @@ class MenuActivity : MenuView, AppCompatActivity() {
     }
 
     override fun pickImage() {
-        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            presenter.imagePicked(uri)
-        }.launch("image/*")
+        imagePicker.launch("image/*")
     }
 
     override fun gotoLogin() {

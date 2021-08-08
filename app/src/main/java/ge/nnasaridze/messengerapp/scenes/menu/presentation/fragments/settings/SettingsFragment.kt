@@ -26,10 +26,9 @@ class SettingsFragment(
     ): View {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-        binding.settingsUpdateButton.setOnClickListener { updateHandler }
-        binding.settingsSignoutButton.setOnClickListener { signoutHandler }
-        binding.settingsIcon.setOnClickListener { imageHandler }
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        binding.settingsUpdateButton.setOnClickListener { updateHandler() }
+        binding.settingsSignoutButton.setOnClickListener { signoutHandler() }
+        binding.settingsIcon.setOnClickListener { imageHandler() }
 
         return binding.root
     }

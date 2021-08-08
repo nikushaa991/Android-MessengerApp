@@ -44,6 +44,7 @@ class SearchRecyclerAdapter(private val handler: (position: Int) -> Unit) :
 
     fun setData(newData: List<RecyclerUserEntity>) {
         data = newData
+        notifyDataSetChanged()
     }
 
     class SearchRecyclerViewHolder(

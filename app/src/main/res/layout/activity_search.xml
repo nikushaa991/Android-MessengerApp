@@ -39,6 +39,8 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@drawable/search_rounded"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:paddingStart="@dimen/search_margin_small"
             android:paddingEnd="@dimen/search_margin_small">
 

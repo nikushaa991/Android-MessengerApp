@@ -10,7 +10,7 @@ import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecycler
 
 
 class ChatRecyclerAdapter : RecyclerView.Adapter<ChatRecyclerViewHolder>() {
-    private var data: List<RecyclerMessageEntity> = arrayListOf()
+    private var data = listOf<RecyclerMessageEntity>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -56,5 +56,6 @@ class ChatRecyclerAdapter : RecyclerView.Adapter<ChatRecyclerViewHolder>() {
 
     fun setData(newData: List<RecyclerMessageEntity>) {
         data = newData
+        notifyDataSetChanged()
     }
 }

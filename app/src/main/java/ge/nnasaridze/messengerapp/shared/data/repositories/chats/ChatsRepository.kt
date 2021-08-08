@@ -6,9 +6,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import ge.nnasaridze.messengerapp.shared.data.dtos.ChatDTO
+import ge.nnasaridze.messengerapp.shared.data.dtos.MessageDTO
 import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.dtos.ChatDTO
-import ge.nnasaridze.messengerapp.shared.data.repositories.dtos.MessageDTO
+import ge.nnasaridze.messengerapp.shared.utils.DATABASE_URL
 
 interface ChatsRepository {
     fun getAndSubscribeChatIDs(
@@ -44,6 +45,7 @@ interface ChatsRepository {
     )
 
     fun getMessage(
+        chatID: String,
         messageID: String,
         handler: (isSuccessful: Boolean, message: MessageEntity) -> Unit,
     )
@@ -54,7 +56,7 @@ interface ChatsRepository {
 class DefaultChatsRepository : ChatsRepository {
 
 
-    private val database = Firebase.database.reference
+    private val database = Firebase.database(DATABASE_URL).reference
     private val subscriptions = mutableMapOf<Int, () -> Unit>()
     private var subscriptionNextFreeToken = 0
 
@@ -95,35 +97,20 @@ class DefaultChatsRepository : ChatsRepository {
         userID2: String,
         handler: (isSuccessful: Boolean, chatID: String) -> Unit,
     ) {
-        val chatID = database.child("chats").push().key
-        if (chatID == null) {
-            handler(false, "")
-            return
-        }
-        val messageID = database.child("messages").child(chatID).push().key
-        val user1Key = database.child("users").child(userID1).child("chats").push().key
-        val user2Key = database.child("users").child(userID2).child("chats").push().key
-
-        if (messageID == null || user1Key == null || user2Key == null) {
-            handler(false, "")
-            return
-        }
-
-        val chatValues = ChatDTO(listOf(userID1, userID2), messageID).toMap()
-        val messageValues =
-            MessageDTO("SYSTEM", "Start of conversation", System.currentTimeMillis()).toMap()
-
-        val childUpdates = hashMapOf(
-            "/chats/$chatID" to chatValues,
-            "/messages/$chatID/$messageID" to messageValues,
-            "users/$userID1/chats/$user1Key" to chatID,
-            "users/$userID2/chats/$user2Key" to chatID,
-        )
-
-        database.updateChildren(childUpdates)
-            .addOnCompleteListener { task ->
-                handler(task.isSuccessful, chatID)
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val chatID = snapshot.getValue(String::class.java)
+                if (chatID == null) {
+                    createChat(userID1, userID2, handler)
+                } else handler(true, chatID)
             }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        }
+
+        database.child("users/$userID1/chatIDs/$userID2")
+            .addListenerForSingleValueEvent(listener)
     }
 
     override fun getChatMembers(
@@ -133,8 +120,8 @@ class DefaultChatsRepository : ChatsRepository {
         val listener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val chat = snapshot.getValue(ChatDTO::class.java)
-                if (chat != null) {
-                    handler(true, chat.userIDs)
+                if (chat?.userIDs != null) {
+                    handler(true, chat.userIDs.values.toList())
                 } else handler(false, listOf())
             }
 
@@ -164,7 +151,7 @@ class DefaultChatsRepository : ChatsRepository {
 
             }
         }
-        val ref = database.child("chats").child(chatID).child("lastMessage")
+        val ref = database.child("chats").child(chatID).child("lastMessageID")
         ref.addValueEventListener(listener)
         subscriptions[subToken] = { ref.removeEventListener(listener) }
     }
@@ -227,6 +214,7 @@ class DefaultChatsRepository : ChatsRepository {
     }
 
     override fun getMessage(
+        chatID: String,
         messageID: String,
         handler: (isSuccessful: Boolean, message: MessageEntity) -> Unit,
     ) {
@@ -242,7 +230,7 @@ class DefaultChatsRepository : ChatsRepository {
             }
         }
 
-        database.child("messages").child(messageID)
+        database.child("messages").child(chatID).child(messageID)
             .addListenerForSingleValueEvent(listener)
     }
 
@@ -253,6 +241,39 @@ class DefaultChatsRepository : ChatsRepository {
         }
     }
 
+    private fun createChat(
+        userID1: String,
+        userID2: String,
+        handler: (isSuccessful: Boolean, chatID: String) -> Unit,
+    ) {
+        val chatID = database.child("chats").push().key
+        if (chatID == null) {
+            handler(false, "")
+            return
+        }
+        val messageID = database.child("messages").child(chatID).push().key
+
+        if (messageID == null) {
+            handler(false, "")
+            return
+        }
+        val userIDs = hashMapOf("user1" to userID1, "user2" to userID2)
+        val chatValues = ChatDTO(userIDs, messageID).toMap()
+        val messageValues =
+            MessageDTO("SYSTEM", "Start of conversation", System.currentTimeMillis()).toMap()
+
+        val childUpdates = hashMapOf(
+            "/chats/$chatID" to chatValues,
+            "/messages/$chatID/$messageID" to messageValues,
+            "users/$userID1/chatIDs/$userID2" to chatID,
+            "users/$userID2/chatIDs/$userID1" to chatID,
+        )
+
+        database.updateChildren(childUpdates)
+            .addOnCompleteListener { task ->
+                handler(task.isSuccessful, chatID)
+            }
+    }
 
     private fun generateSubToken(): Int {
         return subscriptionNextFreeToken++

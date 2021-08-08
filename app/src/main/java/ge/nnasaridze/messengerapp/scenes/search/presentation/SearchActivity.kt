@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ge.nnasaridze.messengerapp.databinding.ActivitySearchBinding
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.ChatActivity
-import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecyclerAdapter
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.SearchRecyclerAdapter
 
@@ -31,7 +30,6 @@ class SearchActivity : SearchView, AppCompatActivity() {
         with(binding) {
             adapter = SearchRecyclerAdapter(::onUserClicked)
             searchRecycler.adapter = adapter
-            searchRecycler.adapter = ChatRecyclerAdapter()
             searchRecycler.layoutManager = LinearLayoutManager(this@SearchActivity)
 
             searchRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {

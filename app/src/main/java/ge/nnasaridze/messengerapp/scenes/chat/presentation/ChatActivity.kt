@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ge.nnasaridze.messengerapp.databinding.ActivityChatBinding
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecyclerAdapter
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.RecyclerMessageEntity
@@ -13,6 +14,7 @@ class ChatActivity : ChatView, AppCompatActivity() {
     private lateinit var binding: ActivityChatBinding
     private lateinit var presenter: ChatPresenter
     private lateinit var adapter: ChatRecyclerAdapter
+    private lateinit var recycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +24,13 @@ class ChatActivity : ChatView, AppCompatActivity() {
             intent.getStringExtra("recipientID")!!)
 
         with(binding) {
+            recycler = chatRecycler
             adapter = ChatRecyclerAdapter()
-            chatRecycler.adapter = adapter
-            chatRecycler.adapter = ChatRecyclerAdapter()
-            chatRecycler.layoutManager =
-                LinearLayoutManager(this@ChatActivity, LinearLayoutManager.VERTICAL, true)
+            recycler.adapter = adapter
+            recycler.layoutManager =
+                LinearLayoutManager(this@ChatActivity).apply {
+                    stackFromEnd = true
+                }
 
             chatSend.setOnClickListener { sendPressed() }
             chatToolbar.setNavigationOnClickListener { presenter.backPressed() }
@@ -41,6 +45,7 @@ class ChatActivity : ChatView, AppCompatActivity() {
 
     override fun updateChat(data: List<RecyclerMessageEntity>) {
         adapter.setData(data)
+        recycler.scrollToPosition(data.size - 1)
     }
 
     override fun setTitle(text: String) {
