@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.search.data.usecases
 
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.pictures.DefaultPicturesRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
 import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
 
 interface GetUsersUsecase {
@@ -37,9 +37,7 @@ class DefaultGetUsersUsecase : GetUsersUsecase {
                 errorHandler("Fetching user failed")
                 return@getUsers
             }
-            picturesRepo.getPictureURL(user.userID) { imageIsSuccessful, uri ->
-                if (!imageIsSuccessful)
-                    errorHandler("Image not found")
+            picturesRepo.getPictureURL(user.userID) { _, uri ->
                 val recyclerEntity =
                     RecyclerUserEntity(user.userID, user.nickname, user.profession, uri)
                 newUserHandler(recyclerEntity)
@@ -59,9 +57,7 @@ class DefaultGetUsersUsecase : GetUsersUsecase {
                 errorHandler("Fetching searched user failed")
                 return@getUsers
             }
-            picturesRepo.getPictureURL(user.userID) { imageIsSuccessful, uri ->
-                if (!imageIsSuccessful)
-                    errorHandler("Image not found")
+            picturesRepo.getPictureURL(user.userID) { _, uri ->
                 val recyclerEntity =
                     RecyclerUserEntity(user.userID, user.nickname, user.profession, uri)
                 newUserHandler(recyclerEntity, nameQuery)

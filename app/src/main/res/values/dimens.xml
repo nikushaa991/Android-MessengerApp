@@ -45,5 +45,6 @@
     <dimen name="edittext_radius">40dp</dimen>
     <dimen name="chat_textfield_height">64dp</dimen>
     <dimen name="chat_margin_small">16dp</dimen>
+    <dimen name="conversations_recycler_padding">96dp</dimen>
 
 </resources>

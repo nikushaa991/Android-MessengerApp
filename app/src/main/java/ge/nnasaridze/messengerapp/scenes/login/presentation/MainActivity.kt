@@ -56,7 +56,7 @@ class MainActivity : LoginView, AppCompatActivity() {
         startActivity(Intent(this, MenuActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_TASK_ON_HOME
         })
-        this.finish()
+        finish()
     }
 
     override fun showLoading() {

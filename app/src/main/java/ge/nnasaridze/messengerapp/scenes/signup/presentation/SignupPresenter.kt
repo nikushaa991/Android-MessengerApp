@@ -22,7 +22,7 @@ class SignupPresenterImpl(
 
     private fun onSuccess() {
         view.hideLoading()
-        view.gotoLogin()
+        view.gotoMenu()
     }
 
     private fun errorHandler(text: String) {

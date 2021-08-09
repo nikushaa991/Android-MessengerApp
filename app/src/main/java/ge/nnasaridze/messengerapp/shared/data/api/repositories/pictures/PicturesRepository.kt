@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.data.repositories.pictures
+package ge.nnasaridze.messengerapp.shared.data.api.repositories.pictures
 
 import android.net.Uri
 import com.google.firebase.ktx.Firebase

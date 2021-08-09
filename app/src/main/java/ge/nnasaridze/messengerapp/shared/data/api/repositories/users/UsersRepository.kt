@@ -1,11 +1,11 @@
-package ge.nnasaridze.messengerapp.shared.data.repositories.users
+package ge.nnasaridze.messengerapp.shared.data.api.repositories.users
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import ge.nnasaridze.messengerapp.shared.data.dtos.UserDTO
+import ge.nnasaridze.messengerapp.shared.data.api.dtos.UserDTO
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 import ge.nnasaridze.messengerapp.shared.utils.DATABASE_URL
 
@@ -22,7 +22,7 @@ interface UsersRepository {
 
     fun getAndListenUser(
         id: String,
-        handler: (isSuccessful: Boolean, user: UserEntity, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, user: UserEntity) -> Unit,
     )
 
     fun getUsers(
@@ -32,15 +32,14 @@ interface UsersRepository {
         handler: (isSuccessful: Boolean, user: UserEntity) -> Unit,
     )
 
-    fun cancelSubscription(subToken: Int)
+    fun cancelSubscriptions()
 }
 
 class DefaultUsersRepository : UsersRepository {
 
 
     private val database = Firebase.database(DATABASE_URL).reference
-    private val subscriptions = mutableMapOf<Int, () -> Unit>()
-    private var subscriptionNextFreeToken = 0
+    private val subscriptions = mutableListOf<() -> Unit>()
 
     override fun createUser(user: UserEntity, handler: (isSuccessful: Boolean) -> Unit) {
         val userDTO = UserDTO(user.nickname, user.nickname, hashMapOf())
@@ -64,16 +63,14 @@ class DefaultUsersRepository : UsersRepository {
 
     override fun getAndListenUser(
         id: String,
-        handler: (isSuccessful: Boolean, user: UserEntity, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, user: UserEntity) -> Unit,
     ) {
-        val subToken = generateSubToken()
-
         val listener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val item = dataSnapshot.getValue(UserDTO::class.java)?.toEntity(id)
                 if (item != null) {
-                    handler(true, item, subToken)
-                } else handler(false, UserEntity("", "", ""), subToken)
+                    handler(true, item)
+                } else handler(false, UserEntity("", "", ""))
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -81,7 +78,7 @@ class DefaultUsersRepository : UsersRepository {
         }
         val ref = database.child("users").child(id)
         ref.addValueEventListener(listener)
-        subscriptions[subToken] = { ref.removeEventListener(listener) }
+        subscriptions.add { ref.removeEventListener(listener) }
     }
 
     override fun getUsers(
@@ -98,10 +95,10 @@ class DefaultUsersRepository : UsersRepository {
                     val userID = ds.key ?: continue
                     val userDTO = ds.getValue(UserDTO::class.java) ?: continue
                     if (userDTO.nickname == null) continue
-                    if (nameQuery in userDTO.nickname && count < to) {
-                        count++
+                    if (nameQuery in userDTO.nickname && count >= from) {
                         handler(true, userDTO.toEntity(userID))
                     }
+                    count++
                 }
                 if (count == 0)
                     handler(false, UserEntity("", "", ""))
@@ -117,15 +114,8 @@ class DefaultUsersRepository : UsersRepository {
         else ref.addListenerForSingleValueEvent(listener)
     }
 
-    override fun cancelSubscription(subToken: Int) {
-        if (subToken in subscriptions) {
-            val remover = subscriptions.remove(subToken)
-            remover?.invoke()
-        }
-    }
-
-
-    private fun generateSubToken(): Int {
-        return subscriptionNextFreeToken++
+    override fun cancelSubscriptions() {
+        for (remover in subscriptions)
+            remover.invoke()
     }
 }

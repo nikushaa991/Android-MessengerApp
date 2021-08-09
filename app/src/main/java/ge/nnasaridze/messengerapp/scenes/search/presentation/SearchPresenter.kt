@@ -37,8 +37,12 @@ class SearchPresenterImpl(
     override fun searchEdited(text: String) {
         isSearching = text.length >= 3
         searchQuery = text
-        if (text.length < 3) return
+        if (text.length < 3) {
+            view.updateSearch(data)
+            return
+        }
         searchedData.clear()
+        view.updateSearch(searchedData)
         getUsersUsecase.execute(
             nameQuery = searchQuery,
             newUserHandler = ::newSearchedUserHandler,

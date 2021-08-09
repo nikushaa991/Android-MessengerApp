@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.chat.data.usecases
 
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.RecyclerMessageEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.chats.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.chats.DefaultChatsRepository
 
 interface SubscribeMessagesUsecase {
     fun execute(
@@ -18,21 +18,13 @@ class DefaultSubscribeMessagesUsecase : SubscribeMessagesUsecase {
 
     private val currentID = DefaultAuthenticationRepository().getID()
     private val chats = DefaultChatsRepository()
-    private var isDestroyed = false
-    private var subToken = -1
 
     override fun execute(
         chatID: String,
         newMessageHandler: (message: RecyclerMessageEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
-        chats.getAndSubscribeMessages(chatID) { isSuccessful, message, subToken ->
-            if (isDestroyed) {
-                chats.cancelSubscription(subToken)
-                return@getAndSubscribeMessages
-            }
-            this.subToken = subToken
-
+        chats.getAndSubscribeMessages(chatID) { isSuccessful, message ->
             if (!isSuccessful) {
                 errorHandler("Fetching message failed")
                 return@getAndSubscribeMessages
@@ -47,7 +39,6 @@ class DefaultSubscribeMessagesUsecase : SubscribeMessagesUsecase {
     }
 
     override fun destroy() {
-        isDestroyed = true
-        chats.cancelSubscription(subToken)
+        chats.cancelSubscriptions()
     }
 }

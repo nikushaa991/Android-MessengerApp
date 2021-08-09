@@ -1,6 +1,6 @@
 package ge.nnasaridze.messengerapp.scenes.login.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
 
 interface IsAuthenticatedUsecase {
     fun execute(

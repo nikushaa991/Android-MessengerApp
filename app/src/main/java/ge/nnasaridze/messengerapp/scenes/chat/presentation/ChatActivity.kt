@@ -2,6 +2,7 @@ package ge.nnasaridze.messengerapp.scenes.chat.presentation
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,10 +32,11 @@ class ChatActivity : ChatView, AppCompatActivity() {
                 LinearLayoutManager(this@ChatActivity).apply {
                     stackFromEnd = true
                 }
-
             chatSend.setOnClickListener { sendPressed() }
             chatToolbar.setNavigationOnClickListener { presenter.backPressed() }
         }
+
+        this.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
         presenter.viewInitialized()
 
@@ -45,7 +47,7 @@ class ChatActivity : ChatView, AppCompatActivity() {
 
     override fun updateChat(data: List<RecyclerMessageEntity>) {
         adapter.setData(data)
-        recycler.scrollToPosition(data.size - 1)
+        recycler.smoothScrollToPosition(data.size)
     }
 
     override fun setTitle(text: String) {

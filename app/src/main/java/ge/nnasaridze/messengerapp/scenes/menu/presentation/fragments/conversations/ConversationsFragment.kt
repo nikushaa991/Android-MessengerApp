@@ -15,6 +15,7 @@ import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversatio
 class ConversationsFragment(
     private val onItemClickHandler: (position: Int) -> Unit,
     private val onTextChangedHandler: (text: String) -> Unit,
+    private val onInitialize: () -> Unit,
 ) : Fragment() {
 
 
@@ -33,6 +34,7 @@ class ConversationsFragment(
 
         binding.conversationsText.doAfterTextChanged { onTextChangedHandler(it.toString()) }
 
+        onInitialize()
         return binding.root
     }
 

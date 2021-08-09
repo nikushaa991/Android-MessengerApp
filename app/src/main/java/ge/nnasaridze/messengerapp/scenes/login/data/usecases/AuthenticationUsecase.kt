@@ -1,8 +1,9 @@
 package ge.nnasaridze.messengerapp.scenes.login.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.AuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.AuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
+import ge.nnasaridze.messengerapp.shared.utils.PASSWORD_ERROR
 
 interface AuthenticationUsecase {
     fun execute(
@@ -24,8 +25,12 @@ class DefaultAuthenticationUsecase : AuthenticationUsecase {
         onSuccessHandler: () -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
-        if (!repo.isValidCredential(name) || !repo.isValidCredential(pass)) {
+        if (!repo.isValidCredential(name)) {
             errorHandler(CREDENTIALS_ERROR)
+            return
+        }
+        if (!repo.isValidPassword(pass)) {
+            errorHandler(PASSWORD_ERROR)
             return
         }
         repo.authenticate(name, pass) { isSuccessful ->

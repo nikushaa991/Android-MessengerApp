@@ -23,10 +23,15 @@ class MenuPresenterImpl(
     private lateinit var newImage: Uri
 
     override fun viewInitialized() {
+        view.showLoading()
         subscribeChatsUsecase.execute(
             newChatHandler = ::newChatHandler,
             errorHandler = ::errorHandler,
         )
+    }
+
+    override fun fragmentInitialized() {
+        refreshViewData()
     }
 
     override fun fabPressed() {
@@ -85,10 +90,13 @@ class MenuPresenterImpl(
 
     private fun newChatHandler(chat: RecyclerChatEntity) {
         data[chat.chatID] = chat
+        if (data.size == 1)
+            view.hideLoading()
         refreshViewData()
     }
 
     private fun errorHandler(text: String) {
+        view.hideLoading()
         view.displayError(text)
     }
 

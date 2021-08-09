@@ -25,6 +25,8 @@ interface MenuView {
 
 interface MenuPresenter {
     fun viewInitialized()
+    fun fragmentInitialized()
+
     fun fabPressed()
 
     fun homePressed()

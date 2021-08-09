@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.data.dtos
+package ge.nnasaridze.messengerapp.shared.data.api.dtos
 
 import com.google.firebase.database.Exclude
 import com.google.firebase.database.IgnoreExtraProperties

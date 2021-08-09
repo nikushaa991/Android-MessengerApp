@@ -7,7 +7,7 @@ interface SignupView {
     fun getPassword(): String
     fun getProfession(): String
 
-    fun gotoLogin()
+    fun gotoMenu()
 
     fun showLoading()
     fun hideLoading()

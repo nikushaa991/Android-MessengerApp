@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".scenes.menu.presentation.fragments.conversations.ConversationsFragment">
 
-
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/conversations_appbar_height">
+        android:layout_height="@dimen/conversations_appbar_height"
+        android:background="@color/menu_blue"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/menu_blue"
-            app:contentScrim="@color/menu_blue"
-            app:layout_scrollFlags="snap|scroll|exitUntilCollapsed">
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/chat_blue"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
-
-            <androidx.appcompat.widget.AppCompatImageView
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/conversations_appbar_image_height"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
+                android:contentDescription="@string/ellipses"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"
-                app:srcCompat="@drawable/ic_background" />
+                android:src="@drawable/ic_background"
+                app:layout_collapseMode="parallax" />
 
             <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/conversations_search_height"
                 android:layout_gravity="bottom"
+                android:layout_marginTop="@dimen/conversations_search_margin"
                 android:layout_marginEnd="@dimen/conversations_search_margin"
                 android:layout_marginBottom="@dimen/conversations_search_margin"
-                app:layout_collapseMode="pin">
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,6 +55,7 @@
                         android:layout_marginEnd="@dimen/conversations_margin_small"
                         android:contentDescription="@string/ellipses"
                         app:srcCompat="@drawable/ic_search"
+                        app:tint="@color/black"
                         tools:ignore="ImageContrastCheck" />
 
                     <EditText
@@ -64,6 +67,8 @@
                         android:hint="@string/conversations_search_hint"
                         android:importantForAutofill="no"
                         android:inputType="textPersonName"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
                         tools:ignore="TextContrastCheck" />
                 </LinearLayout>
             </androidx.appcompat.widget.Toolbar>
@@ -76,9 +81,12 @@
         android:id="@+id/conversations_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/conversations_recycler_padding"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:itemCount="8"
         tools:listitem="@layout/conversations_recycler_item">
 
     </androidx.recyclerview.widget.RecyclerView>
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,7 +1,7 @@
 package ge.nnasaridze.messengerapp.scenes.search.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.chats.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.chats.DefaultChatsRepository
 
 interface CreateChatUsecase {
     fun execute(

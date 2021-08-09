@@ -1,9 +1,10 @@
 package ge.nnasaridze.messengerapp.scenes.signup.data.usecases
 
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
+import ge.nnasaridze.messengerapp.shared.utils.PASSWORD_ERROR
 
 interface RegisterUsecase {
     fun execute(
@@ -27,8 +28,12 @@ class DefaultRegisterUsecase : RegisterUsecase {
         onSuccessHandler: () -> Unit,
         errorHandler: (error: String) -> Unit,
     ) {
-        if (!authRepo.isValidCredential(name) || !authRepo.isValidCredential(pass)) {
+        if (!authRepo.isValidCredential(name)) {
             errorHandler(CREDENTIALS_ERROR)
+            return
+        }
+        if (!authRepo.isValidPassword(pass)) {
+            errorHandler(PASSWORD_ERROR)
             return
         }
 

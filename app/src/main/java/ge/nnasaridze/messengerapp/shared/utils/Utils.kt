@@ -8,11 +8,11 @@ const val DATABASE_URL =
     "https://messenger-app-c7d14-default-rtdb.europe-west1.firebasedatabase.app"
 
 const val EMAIL_SUFFIX = "@fake.fake"
-const val UNREGISTERED = "UNREGISTERED"
 
 const val CREDENTIALS_ERROR = "Credentials must be alphanumeric and non-empty"
+const val PASSWORD_ERROR = "Password must be alphanumeric and longer than 6 characters"
 
-const val LAZY_LOADING_AMOUNT = 10
+const val LAZY_LOADING_AMOUNT = 8
 
 const val MINUTE = 60000L
 const val HOUR = 3600000L
@@ -29,7 +29,5 @@ fun formatChatTime(time: Long): String {
 }
 
 fun formatMessageTime(time: Long): String {
-    val hour = (time % DAY) / HOUR
-    val minute = (time % HOUR) / MINUTE
-    return "$hour:$minute"
+    return SimpleDateFormat("HH:mm", Locale.getDefault()).format(time)
 }

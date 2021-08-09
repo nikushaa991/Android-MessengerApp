@@ -1,7 +1,7 @@
 package ge.nnasaridze.messengerapp.scenes.chat.data.usecases
 
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
 
 interface SubscribeUserUsecase {
     fun execute(
@@ -17,20 +17,13 @@ class DefaultSubscribeUserUsecase : SubscribeUserUsecase {
 
 
     private val repo = DefaultUsersRepository()
-    private var isDestroyed = false
-    private var subToken = -1
 
     override fun execute(
         userID: String,
         onSuccessHandler: (user: UserEntity) -> Unit,
         errorHandler: (text: String) -> Unit,
     ) {
-        repo.getAndListenUser(userID) { isSuccessful, user, subToken ->
-            if (isDestroyed) {
-                repo.cancelSubscription(subToken)
-                return@getAndListenUser
-            }
-            this.subToken = subToken
+        repo.getAndListenUser(userID) { isSuccessful, user ->
             if (!isSuccessful) {
                 errorHandler("Fetching user failed")
                 return@getAndListenUser
@@ -40,7 +33,6 @@ class DefaultSubscribeUserUsecase : SubscribeUserUsecase {
     }
 
     override fun destroy() {
-        isDestroyed = true
-        repo.cancelSubscription(subToken)
+        repo.cancelSubscriptions()
     }
 }

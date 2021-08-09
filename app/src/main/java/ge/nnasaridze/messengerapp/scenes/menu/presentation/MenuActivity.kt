@@ -52,7 +52,8 @@ class MenuActivity : MenuView, AppCompatActivity() {
         with(binding) {
             menuFab.setOnClickListener { fabPressed() }
 
-            conversations = ConversationsFragment(::chatPressed, ::onTextChanged)
+            conversations = ConversationsFragment(::chatPressed,
+                ::onTextChanged, presenter::fragmentInitialized)
             settings = SettingsFragment(::updatePressed, ::signoutPressed, ::imagePressed)
 
             pager = menuViewpager

@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.data.repositories.chats
+package ge.nnasaridze.messengerapp.shared.data.api.repositories.chats
 
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -6,15 +6,15 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import ge.nnasaridze.messengerapp.shared.data.dtos.ChatDTO
-import ge.nnasaridze.messengerapp.shared.data.dtos.MessageDTO
+import ge.nnasaridze.messengerapp.shared.data.api.dtos.ChatDTO
+import ge.nnasaridze.messengerapp.shared.data.api.dtos.MessageDTO
 import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 import ge.nnasaridze.messengerapp.shared.utils.DATABASE_URL
 
 interface ChatsRepository {
     fun getAndSubscribeChatIDs(
         id: String,
-        handler: (isSuccessful: Boolean, chatID: String, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, chatID: String) -> Unit,
     )
 
     fun addChat(
@@ -30,12 +30,12 @@ interface ChatsRepository {
 
     fun getAndListenChatLastMessageID(
         chatID: String,
-        handler: (isSuccessful: Boolean, messageID: String, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, messageID: String) -> Unit,
     )
 
     fun getAndSubscribeMessages(
         chatID: String,
-        handler: (isSuccessful: Boolean, message: MessageEntity, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, message: MessageEntity) -> Unit,
     )
 
     fun addMessage(
@@ -50,28 +50,25 @@ interface ChatsRepository {
         handler: (isSuccessful: Boolean, message: MessageEntity) -> Unit,
     )
 
-    fun cancelSubscription(subToken: Int)
+    fun cancelSubscriptions()
 }
 
 class DefaultChatsRepository : ChatsRepository {
 
 
     private val database = Firebase.database(DATABASE_URL).reference
-    private val subscriptions = mutableMapOf<Int, () -> Unit>()
-    private var subscriptionNextFreeToken = 0
+    private val subscriptions = mutableListOf<() -> Unit>()
 
     override fun getAndSubscribeChatIDs(
         id: String,
-        handler: (isSuccessful: Boolean, chatID: String, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, chatID: String) -> Unit,
     ) {
-        val subToken = generateSubToken()
-
         val listener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val chatID = dataSnapshot.getValue(String::class.java)
                 if (chatID != null) {
-                    handler(true, chatID, subToken)
-                } else handler(false, "", subToken)
+                    handler(true, chatID)
+                } else handler(false, "")
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -88,7 +85,7 @@ class DefaultChatsRepository : ChatsRepository {
         }
         val ref = database.child("users").child(id).child("chatIDs")
         ref.addChildEventListener(listener)
-        subscriptions[subToken] = { ref.removeEventListener(listener) }
+        subscriptions.add { ref.removeEventListener(listener) }
     }
 
 
@@ -135,10 +132,8 @@ class DefaultChatsRepository : ChatsRepository {
 
     override fun getAndListenChatLastMessageID(
         chatID: String,
-        handler: (isSuccessful: Boolean, messageID: String, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, messageID: String) -> Unit,
     ) {
-        val subToken = generateSubToken()
-
         val listener = object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
             }
@@ -146,29 +141,27 @@ class DefaultChatsRepository : ChatsRepository {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val messageID = dataSnapshot.getValue(String::class.java)
                 if (messageID != null) {
-                    handler(true, messageID, subToken)
-                } else handler(false, "", subToken)
+                    handler(true, messageID)
+                } else handler(false, "")
 
             }
         }
         val ref = database.child("chats").child(chatID).child("lastMessageID")
         ref.addValueEventListener(listener)
-        subscriptions[subToken] = { ref.removeEventListener(listener) }
+        subscriptions.add { ref.removeEventListener(listener) }
     }
 
     override fun getAndSubscribeMessages(
         chatID: String,
-        handler: (isSuccessful: Boolean, message: MessageEntity, subToken: Int) -> Unit,
+        handler: (isSuccessful: Boolean, message: MessageEntity) -> Unit,
     ) {
-        val subToken = generateSubToken()
-
         val listener = object : ChildEventListener {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val item =
                     dataSnapshot.getValue(MessageDTO::class.java)?.toEntity()
                 if (item != null) {
-                    handler(true, item, subToken)
-                } else handler(false, MessageEntity("", "", 0), subToken)
+                    handler(true, item)
+                } else handler(false, MessageEntity("", "", 0))
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -185,7 +178,7 @@ class DefaultChatsRepository : ChatsRepository {
         }
         val ref = database.child("messages").child(chatID)
         ref.addChildEventListener(listener)
-        subscriptions[subToken] = { ref.removeEventListener(listener) }
+        subscriptions.add { ref.removeEventListener(listener) }
     }
 
 
@@ -234,11 +227,9 @@ class DefaultChatsRepository : ChatsRepository {
             .addListenerForSingleValueEvent(listener)
     }
 
-    override fun cancelSubscription(subToken: Int) {
-        if (subToken in subscriptions) {
-            val remover = subscriptions.remove(subToken)
-            remover?.invoke()
-        }
+    override fun cancelSubscriptions() {
+        for (remover in subscriptions)
+            remover.invoke()
     }
 
     private fun createChat(
@@ -273,10 +264,6 @@ class DefaultChatsRepository : ChatsRepository {
             .addOnCompleteListener { task ->
                 handler(task.isSuccessful, chatID)
             }
-    }
-
-    private fun generateSubToken(): Int {
-        return subscriptionNextFreeToken++
     }
 }
 

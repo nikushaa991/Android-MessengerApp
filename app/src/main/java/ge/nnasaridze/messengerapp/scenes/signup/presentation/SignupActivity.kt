@@ -1,10 +1,12 @@
 package ge.nnasaridze.messengerapp.scenes.signup.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ge.nnasaridze.messengerapp.databinding.ActivitySignupBinding
+import ge.nnasaridze.messengerapp.scenes.menu.presentation.MenuActivity
 
 class SignupActivity : SignupView, AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
@@ -37,7 +39,10 @@ class SignupActivity : SignupView, AppCompatActivity() {
         return binding.signupProfText.text.toString()
     }
 
-    override fun gotoLogin() {
+    override fun gotoMenu() {
+        startActivity(Intent(this, MenuActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
         finish()
     }
 

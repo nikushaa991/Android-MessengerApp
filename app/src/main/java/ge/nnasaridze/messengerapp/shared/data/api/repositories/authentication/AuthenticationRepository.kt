@@ -1,9 +1,8 @@
-package ge.nnasaridze.messengerapp.shared.data.repositories.authentication
+package ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import ge.nnasaridze.messengerapp.shared.utils.EMAIL_SUFFIX
-import ge.nnasaridze.messengerapp.shared.utils.UNREGISTERED
 
 interface AuthenticationRepository {
     fun getID(): String
@@ -23,6 +22,7 @@ interface AuthenticationRepository {
     fun updateName(nickname: String, handler: (isSuccessful: Boolean) -> Unit)
 
     fun isValidCredential(credential: String): Boolean
+    fun isValidPassword(password: String): Boolean
 }
 
 class DefaultAuthenticationRepository : AuthenticationRepository {
@@ -31,7 +31,7 @@ class DefaultAuthenticationRepository : AuthenticationRepository {
     private val auth = Firebase.auth
 
     override fun getID(): String {
-        return auth.uid ?: UNREGISTERED
+        return auth.uid ?: ""
     }
 
     override fun isAuthenticated(): Boolean {
@@ -72,6 +72,12 @@ class DefaultAuthenticationRepository : AuthenticationRepository {
         return credential.isNotEmpty() &&
                 credential.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
                     .length == credential.length
+    }
+
+    override fun isValidPassword(password: String): Boolean {
+        return password.length > 6 &&
+                password.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
+                    .length == password.length
     }
 }
 

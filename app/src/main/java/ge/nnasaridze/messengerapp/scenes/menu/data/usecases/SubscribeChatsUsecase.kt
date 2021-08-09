@@ -1,12 +1,12 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.chats.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.pictures.DefaultPicturesRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
 import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.chats.DefaultChatsRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.pictures.DefaultPicturesRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
 
 interface SubscribeChatsUsecase {
     fun execute(
@@ -24,13 +24,9 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     private val chatsRepo = DefaultChatsRepository()
     private val imagesRepo = DefaultPicturesRepository()
 
-    private val messageHandlerVersions = mutableMapOf<String, Int>()
-    private val usersSubTokens = mutableSetOf<Int>()
-    private val chatsSubTokens = mutableSetOf<Int>()
-    private var isDestroyed = false
-
     private lateinit var newChatHandler: (chat: RecyclerChatEntity) -> Unit
     private lateinit var errorHandler: (text: String) -> Unit
+    private val localRepos = mutableSetOf<DefaultChatsRepository>()
 
     override fun execute(
         newChatHandler: (chat: RecyclerChatEntity) -> Unit,
@@ -39,10 +35,7 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
         this.newChatHandler = newChatHandler
         this.errorHandler = errorHandler
 
-        chatsRepo.getAndSubscribeChatIDs(currentId) { isSuccessful, chatID, subToken ->
-            if (isDestroyed)
-                return@getAndSubscribeChatIDs
-            chatsSubTokens.add(subToken)
+        chatsRepo.getAndSubscribeChatIDs(currentId) { isSuccessful, chatID ->
             if (!isSuccessful) {
                 errorHandler("Fetching chat failed")
                 return@getAndSubscribeChatIDs
@@ -52,17 +45,14 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     }
 
     override fun destroy() {
-        isDestroyed = true
-        for (token in usersSubTokens)
-            usersRepo.cancelSubscription(token)
-        for (token in chatsSubTokens)
-            chatsRepo.cancelSubscription(token)
+        usersRepo.cancelSubscriptions()
+        chatsRepo.cancelSubscriptions()
+        for (repo in localRepos)
+            repo.cancelSubscriptions()
     }
 
     private fun getChatUserID(chatID: String) {
         chatsRepo.getChatMembers(chatID) { isSuccessful, members ->
-            if (isDestroyed)
-                return@getChatMembers
             if (!isSuccessful) {
                 errorHandler("Fetching chat user failed")
                 return@getChatMembers
@@ -73,31 +63,23 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     }
 
     private fun getChatUser(chatID: String, userID: String) {
-        var version = -1
-        usersRepo.getAndListenUser(userID) { isSuccessful, user, subToken ->
-            if (isDestroyed)
-                return@getAndListenUser
-            usersSubTokens.add(subToken)
+        val localRepo = DefaultChatsRepository()
+        localRepos.add(localRepo)
+        usersRepo.getAndListenUser(userID) { isSuccessful, user ->
             if (!isSuccessful) {
                 errorHandler("Fetching chat user failed")
                 return@getAndListenUser
             }
-            messageHandlerVersions[chatID] = ++version
-            getLastMessageID(version, chatID, user)
+            localRepo.cancelSubscriptions()
+            getLastMessageID(chatID, user, localRepo)
         }
     }
 
-    private fun getLastMessageID(version: Int, chatID: String, user: UserEntity) {
-        chatsRepo.getAndListenChatLastMessageID(chatID) { isSuccessful, messageID, subToken ->
-            if (isDestroyed)
-                return@getAndListenChatLastMessageID
-            chatsSubTokens.add(subToken)
+    private fun getLastMessageID(chatID: String, user: UserEntity, localRepo: DefaultChatsRepository) {
+        localRepo.getAndListenChatLastMessageID(chatID) { isSuccessful, messageID ->
             if (!isSuccessful) {
                 errorHandler("Fetching chat user failed")
                 return@getAndListenChatLastMessageID
-            }
-            if (version < messageHandlerVersions[chatID] ?: version + 1) {
-                chatsRepo.cancelSubscription(subToken)
             }
             getLastMessage(chatID, messageID, user)
         }
@@ -105,8 +87,6 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
 
     private fun getLastMessage(chatID: String, messageID: String, user: UserEntity) {
         chatsRepo.getMessage(chatID, messageID) { isSuccessful, message ->
-            if (isDestroyed)
-                return@getMessage
             if (!isSuccessful) {
                 errorHandler("Fetching message failed")
                 return@getMessage
@@ -116,9 +96,7 @@ class DefaultSubscribeChatsUsecase : SubscribeChatsUsecase {
     }
 
     private fun constructChat(chatID: String, user: UserEntity, message: MessageEntity) {
-        imagesRepo.getPictureURL(user.userID) { isSuccessful, uri ->
-            if (!isSuccessful)
-                errorHandler("Image not found")
+        imagesRepo.getPictureURL(user.userID) { _, uri ->
             newChatHandler(RecyclerChatEntity(chatID, user, message, uri))
         }
     }

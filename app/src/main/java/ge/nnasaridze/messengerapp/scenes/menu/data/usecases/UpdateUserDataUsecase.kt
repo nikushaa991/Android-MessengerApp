@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
-import ge.nnasaridze.messengerapp.shared.data.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
 
 interface UpdateUserDataUsecase {
     fun execute(
