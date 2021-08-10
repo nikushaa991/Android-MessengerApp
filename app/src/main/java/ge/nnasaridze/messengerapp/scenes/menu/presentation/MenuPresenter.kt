@@ -23,7 +23,6 @@ class MenuPresenterImpl(
     private lateinit var newImage: Uri
 
     override fun viewInitialized() {
-        view.showLoading()
         subscribeChatsUsecase.execute(
             newChatHandler = ::newChatHandler,
             errorHandler = ::errorHandler,
