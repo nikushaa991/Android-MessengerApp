@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.chat.data.usecases
 
-import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.chats.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 
 interface SendMessageUsecase {
     fun execute(

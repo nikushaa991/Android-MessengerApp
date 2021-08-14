@@ -3,9 +3,9 @@ package ge.nnasaridze.messengerapp.scenes.search.presentation.recycler
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.SearchRecyclerItemBinding
+import ge.nnasaridze.messengerapp.shared.utils.DefaultImageLoader
+import ge.nnasaridze.messengerapp.shared.utils.ImageLoader
 
 
 class SearchRecyclerAdapter(private val handler: (position: Int) -> Unit) :
@@ -49,7 +49,8 @@ class SearchRecyclerAdapter(private val handler: (position: Int) -> Unit) :
 
     class SearchRecyclerViewHolder(
         private val binding: SearchRecyclerItemBinding,
-    ) :
+        private val imageLoader: ImageLoader = DefaultImageLoader(),
+        ) :
         RecyclerView.ViewHolder(binding.root) {
 
 
@@ -58,11 +59,7 @@ class SearchRecyclerAdapter(private val handler: (position: Int) -> Unit) :
                 searchName.text = data.nickname
                 searchProf.text = data.profession
 
-                Glide.with(itemView.context)
-                    .load(data.image)
-                    .placeholder(R.drawable.avatar_image_placeholder)
-                    .error(R.drawable.avatar_image_placeholder)
-                    .into(searchIcon)
+                imageLoader.loadImage(itemView.context, data.image, searchIcon)
             }
         }
     }

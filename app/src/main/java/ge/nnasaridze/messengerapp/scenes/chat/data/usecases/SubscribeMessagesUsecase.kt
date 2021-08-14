@@ -2,7 +2,7 @@ package ge.nnasaridze.messengerapp.scenes.chat.data.usecases
 
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.RecyclerMessageEntity
 import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.chats.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime.DefaultChatsRepository
 
 interface SubscribeMessagesUsecase {
     fun execute(

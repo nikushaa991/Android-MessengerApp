@@ -2,7 +2,6 @@ package ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication
 
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import ge.nnasaridze.messengerapp.shared.utils.EMAIL_SUFFIX
 
 interface AuthenticationRepository {
     fun getID(): String
@@ -19,7 +18,10 @@ interface AuthenticationRepository {
         handler: (isSuccessful: Boolean) -> Unit,
     )
 
-    fun updateName(nickname: String, handler: (isSuccessful: Boolean) -> Unit)
+    fun updateName(
+        nickname: String,
+        handler: (isSuccessful: Boolean) -> Unit,
+    )
 
     fun isValidCredential(credential: String): Boolean
     fun isValidPassword(password: String): Boolean
@@ -78,6 +80,10 @@ class DefaultAuthenticationRepository : AuthenticationRepository {
         return password.length > 6 &&
                 password.filter { it in 'A'..'Z' || it in 'a'..'z' || it in '0'..'9' }
                     .length == password.length
+    }
+
+    companion object {
+        const val EMAIL_SUFFIX = "@fake.fake"
     }
 }
 

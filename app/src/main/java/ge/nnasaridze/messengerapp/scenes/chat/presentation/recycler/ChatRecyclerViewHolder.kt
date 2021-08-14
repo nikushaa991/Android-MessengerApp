@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import ge.nnasaridze.messengerapp.databinding.ChatRecyclerReceivedItemBinding
 import ge.nnasaridze.messengerapp.databinding.ChatRecyclerSentItemBinding
-import ge.nnasaridze.messengerapp.shared.utils.formatMessageTime
+import ge.nnasaridze.messengerapp.shared.utils.FormatTime.formatMessageTime
 
 sealed class ChatRecyclerViewHolder(binding: ViewBinding) :
     RecyclerView.ViewHolder(binding.root) {

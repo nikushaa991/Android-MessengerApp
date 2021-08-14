@@ -1,7 +1,7 @@
 package ge.nnasaridze.messengerapp.scenes.signup.data.usecases
 
 import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime.DefaultUsersRepository
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 import ge.nnasaridze.messengerapp.shared.utils.CREDENTIALS_ERROR
 import ge.nnasaridze.messengerapp.shared.utils.PASSWORD_ERROR

@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.data.api.repositories.users
+package ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime
 
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError

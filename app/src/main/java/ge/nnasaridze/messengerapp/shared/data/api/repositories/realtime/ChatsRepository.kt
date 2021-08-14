@@ -1,4 +1,4 @@
-package ge.nnasaridze.messengerapp.shared.data.api.repositories.chats
+package ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime
 
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot

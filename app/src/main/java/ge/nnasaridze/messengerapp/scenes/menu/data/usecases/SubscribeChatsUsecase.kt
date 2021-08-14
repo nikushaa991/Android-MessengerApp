@@ -2,9 +2,9 @@ package ge.nnasaridze.messengerapp.scenes.menu.data.usecases
 
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
 import ge.nnasaridze.messengerapp.shared.data.api.repositories.authentication.DefaultAuthenticationRepository
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.chats.DefaultChatsRepository
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.pictures.DefaultPicturesRepository
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime.DefaultChatsRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.storage.DefaultPicturesRepository
 import ge.nnasaridze.messengerapp.shared.data.entities.MessageEntity
 import ge.nnasaridze.messengerapp.shared.data.entities.UserEntity
 

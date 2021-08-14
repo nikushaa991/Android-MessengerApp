@@ -11,7 +11,6 @@ class LoginPresenterImpl(
     private val isAuthenticatedUsecase: IsAuthenticatedUsecase = DefaultIsAuthenticatedUsecase(),
 ) : LoginPresenter {
 
-
     override fun viewInitialized() {
         isAuthenticatedUsecase.execute { isAuthenticated ->
             if (isAuthenticated)

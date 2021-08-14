@@ -13,6 +13,8 @@ import ge.nnasaridze.messengerapp.databinding.ActivitySearchBinding
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.ChatActivity
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.SearchRecyclerAdapter
+import ge.nnasaridze.messengerapp.shared.utils.chatIDExtra
+import ge.nnasaridze.messengerapp.shared.utils.recipientIDExtra
 
 
 class SearchActivity : SearchView, AppCompatActivity() {
@@ -57,8 +59,8 @@ class SearchActivity : SearchView, AppCompatActivity() {
     override fun gotoChat(chatID: String, recipientID: String) {
         startActivity(
             Intent(this, ChatActivity::class.java)
-                .putExtra("chatID", chatID)
-                .putExtra("recipientID", recipientID)
+                .putExtra(chatIDExtra, chatID)
+                .putExtra(recipientIDExtra, recipientID)
         )
     }
 

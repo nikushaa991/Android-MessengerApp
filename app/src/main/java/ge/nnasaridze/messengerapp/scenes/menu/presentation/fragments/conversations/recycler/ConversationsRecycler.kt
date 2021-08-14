@@ -3,11 +3,12 @@ package ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversati
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.ConversationsRecyclerItemBinding
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.ConversationsRecyclerAdapter.ConversationsRecyclerViewHolder
-import ge.nnasaridze.messengerapp.shared.utils.formatChatTime
+import ge.nnasaridze.messengerapp.shared.utils.DefaultImageLoader
+import ge.nnasaridze.messengerapp.shared.utils.FormatTime.formatChatTime
+import ge.nnasaridze.messengerapp.shared.utils.ImageLoader
 
 
 class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit) :
@@ -51,6 +52,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
 
     class ConversationsRecyclerViewHolder(
         private val binding: ConversationsRecyclerItemBinding,
+        private val imageLoader: ImageLoader = DefaultImageLoader(),
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -62,11 +64,7 @@ class ConversationsRecyclerAdapter(private val handler: (position: Int) -> Unit)
                 conversationsTime.text = formatChatTime(data.lastMessage.timestamp)
                 conversationsIcon.setImageResource(R.drawable.avatar_image_placeholder)
 
-                Glide.with(itemView.context)
-                    .load(data.image)
-                    .placeholder(R.drawable.avatar_image_placeholder)
-                    .error(R.drawable.avatar_image_placeholder)
-                    .into(conversationsIcon)
+                imageLoader.loadImage(itemView.context, data.image, conversationsIcon)
             }
         }
     }

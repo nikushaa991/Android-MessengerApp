@@ -5,17 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import ge.nnasaridze.messengerapp.R
 import ge.nnasaridze.messengerapp.databinding.FragmentSettingsBinding
+import ge.nnasaridze.messengerapp.shared.utils.DefaultImageLoader
+import ge.nnasaridze.messengerapp.shared.utils.ImageLoader
 
 
 class SettingsFragment(
     private val updateHandler: () -> Unit,
     private val signoutHandler: () -> Unit,
     private val imageHandler: () -> Unit,
+    private val imageLoader: ImageLoader = DefaultImageLoader(),
 ) : Fragment() {
 
     private lateinit var binding: FragmentSettingsBinding
@@ -42,11 +42,7 @@ class SettingsFragment(
     }
 
     fun setImage(image: Uri) {
-        Glide.with(this)
-            .load(image)
-            .placeholder(R.drawable.avatar_image_placeholder)
-            .error(R.drawable.avatar_image_placeholder)
-            .into(binding.settingsIcon)
+        imageLoader.loadImage(this, image, binding.settingsIcon)
     }
 
     fun getName(): String {

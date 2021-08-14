@@ -21,21 +21,11 @@ import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversatio
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.conversations.recycler.RecyclerChatEntity
 import ge.nnasaridze.messengerapp.scenes.menu.presentation.fragments.settings.SettingsFragment
 import ge.nnasaridze.messengerapp.scenes.search.presentation.SearchActivity
+import ge.nnasaridze.messengerapp.shared.utils.chatIDExtra
+import ge.nnasaridze.messengerapp.shared.utils.recipientIDExtra
 
 class MenuActivity : MenuView, AppCompatActivity() {
 
-    class MenuFragmentsPagerAdapter(
-        activity: FragmentActivity,
-        private val fragments: ArrayList<Fragment>,
-    ) : FragmentStateAdapter(activity) {
-        override fun getItemCount() = fragments.size
-        override fun createFragment(position: Int) = fragments[position]
-    }
-
-    companion object {
-        const val FRAGMENT_CONVERSATIONS = 0
-        const val FRAGMENT_SETTINGS = 1
-    }
 
     private lateinit var binding: ActivityMenuBinding
     private lateinit var presenter: MenuPresenter
@@ -116,8 +106,8 @@ class MenuActivity : MenuView, AppCompatActivity() {
     override fun gotoChat(chatID: String, recipientID: String) {
         startActivity(
             Intent(this, ChatActivity::class.java)
-                .putExtra("chatID", chatID)
-                .putExtra("recipientID", recipientID)
+                .putExtra(chatIDExtra, chatID)
+                .putExtra(recipientIDExtra, recipientID)
         )
     }
 
@@ -188,4 +178,19 @@ class MenuActivity : MenuView, AppCompatActivity() {
     private fun imagePressed() {
         presenter.imagePressed()
     }
+
+
+    class MenuFragmentsPagerAdapter(
+        activity: FragmentActivity,
+        private val fragments: ArrayList<Fragment>,
+    ) : FragmentStateAdapter(activity) {
+        override fun getItemCount() = fragments.size
+        override fun createFragment(position: Int) = fragments[position]
+    }
+
+    companion object {
+        const val FRAGMENT_CONVERSATIONS = 0
+        const val FRAGMENT_SETTINGS = 1
+    }
+
 }

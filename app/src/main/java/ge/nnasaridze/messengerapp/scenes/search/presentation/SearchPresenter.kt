@@ -35,9 +35,9 @@ class SearchPresenterImpl(
     }
 
     override fun searchEdited(text: String) {
-        isSearching = text.length >= 3
+        isSearching = text.length >= MINIMUM_QUERY_LENGTH
         searchQuery = text
-        if (text.length < 3) {
+        if (text.length < MINIMUM_QUERY_LENGTH) {
             view.updateSearch(data)
             return
         }
@@ -90,5 +90,9 @@ class SearchPresenterImpl(
     private fun errorHandler(text: String) {
         view.hideLoading()
         view.displayError(text)
+    }
+
+    companion object{
+        const val MINIMUM_QUERY_LENGTH = 3
     }
 }

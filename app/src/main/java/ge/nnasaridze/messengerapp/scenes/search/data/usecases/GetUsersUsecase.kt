@@ -1,8 +1,8 @@
 package ge.nnasaridze.messengerapp.scenes.search.data.usecases
 
 import ge.nnasaridze.messengerapp.scenes.search.presentation.recycler.RecyclerUserEntity
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.pictures.DefaultPicturesRepository
-import ge.nnasaridze.messengerapp.shared.data.api.repositories.users.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.realtime.DefaultUsersRepository
+import ge.nnasaridze.messengerapp.shared.data.api.repositories.storage.DefaultPicturesRepository
 import ge.nnasaridze.messengerapp.shared.utils.LAZY_LOADING_AMOUNT
 
 interface GetUsersUsecase {

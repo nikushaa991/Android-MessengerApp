@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ge.nnasaridze.messengerapp.databinding.ActivityChatBinding
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.ChatRecyclerAdapter
 import ge.nnasaridze.messengerapp.scenes.chat.presentation.recycler.RecyclerMessageEntity
+import ge.nnasaridze.messengerapp.shared.utils.chatIDExtra
+import ge.nnasaridze.messengerapp.shared.utils.recipientIDExtra
 
 class ChatActivity : ChatView, AppCompatActivity() {
     private lateinit var binding: ActivityChatBinding
@@ -21,8 +23,8 @@ class ChatActivity : ChatView, AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(layoutInflater)
         presenter = ChatPresenterImpl(this,
-            intent.getStringExtra("chatID")!!,
-            intent.getStringExtra("recipientID")!!)
+            intent.getStringExtra(chatIDExtra)!!,
+            intent.getStringExtra(recipientIDExtra)!!)
 
         with(binding) {
             recycler = chatRecycler
