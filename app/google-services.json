@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "430541634891",
+    "firebase_url": "https://messenger-app-c7d14-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "messenger-app-c7d14",
+    "storage_bucket": "messenger-app-c7d14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430541634891:android:68b7d1e750cd2dae6afcce",
+        "android_client_info": {
+          "package_name": "ge.nnasaridze.messengerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430541634891-c6fuhsrprqtmjcf2rg39kphbrnsdka57.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmY8ZP-2UqJoejmKVEbDT2icLAsHsoc00"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430541634891-c6fuhsrprqtmjcf2rg39kphbrnsdka57.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
